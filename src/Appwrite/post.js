@@ -32,6 +32,18 @@ export class Service{
         }
     }
 
+    async getPosts() {
+        try {
+            return await this.databases.listDocuments(
+                config.appWriteDb,
+                config.appWriteCollection,
+            )
+        } catch (error) {
+            console.log(error);
+            return false;
+        }
+    }
+
     async createFile(file){
         try {
            return this.storage.createFile(
@@ -42,6 +54,20 @@ export class Service{
             
         } catch (error) {
             console.log(error);
+        }
+    }
+
+    async getFilePreview(fileId){
+        console.log(fileId);
+        try {
+            return  this.storage.getFilePreview(
+                config.appWriteBucket,
+                fileId
+            )
+
+        } catch (error) {
+            console.log(error);
+            throw error;
         }
     }
 }

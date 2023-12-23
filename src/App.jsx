@@ -8,6 +8,7 @@ import authObj from './Appwrite/auth';
 import { useDispatch } from 'react-redux';
 import { useEffect } from 'react';
 import AddPost from './pages/AddPost';
+import AllPost from './pages/AllPost';
 
 
   
@@ -34,6 +35,7 @@ function App() {
       <Route path="/signup" element={<Signup />} ></Route>
       <Route path="/login" element={<Login />} ></Route>
       <Route path="/addpost" element={<AddPost />} ></Route>
+      <Route path="/allpost" element={<AllPost />} ></Route>
         
       </Routes>
     </>
