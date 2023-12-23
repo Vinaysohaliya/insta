@@ -32,6 +32,7 @@ const Header = () => {
             <button onClick={handleLogout} className="underline cursor-pointer">
               Logout
             </button>
+            <Link to='/addpost'>AddPost</Link>
           </>
         ) : (
           <Link to="/login">Login</Link>
