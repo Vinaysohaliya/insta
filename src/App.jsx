@@ -1,12 +1,41 @@
-import './App.css'
+import './App.css';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import Signup from './pages/Signup';
+import Login from './pages/Login';
+import Home from './pages/Home';
+import { login } from './Redux/authSlice';
+import authObj from './Appwrite/auth';
+import { useDispatch } from 'react-redux';
+import { useEffect } from 'react';
 
+
+  
 function App() {
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+
+    authObj.getuser().then((data) => {
+      if (data) {
+        console.log(data);
+        dispatch(login(data ))
+      } else {
+        dispatch(logout())
+      }
+    })
+  }, []);
+
 
   return (
-    <h1 className="text-3xl font-bold underline">
-    Hello world!
-  </h1>
-  )
+    <>
+      <Routes>
+      <Route path="/" element={<Home />} ></Route>
+      <Route path="/signup" element={<Signup />} ></Route>
+      <Route path="/login" element={<Login />} ></Route>
+        
+      </Routes>
+    </>
+  );
 }
 
-export default App
+export default App;
