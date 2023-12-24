@@ -8,11 +8,18 @@ import AddPost from './pages/AddPost';
 import AllPost from './pages/AllPost';
 import MyPost from './pages/myPost';
 
-
+import { checkAuthentication } from './Redux/authSlice';
+import { useDispatch } from 'react-redux';
+import { useEffect } from 'react';
   
 function App() {
   
+  const dispatch = useDispatch();
 
+
+  useEffect(() => {
+    dispatch(checkAuthentication());
+  }, [dispatch]);
 
   return (
     <>

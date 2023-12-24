@@ -49,7 +49,7 @@ const Signup = () => {
 
 
 
-const userCollection=userservice.createUser({profileId:file.$id,userId:userData.$id})
+const userCollection=userservice.createUser({profileId:file.$id,userId:userData.$id,name:formData.name})
 
         if (userData && userCollection) {
           const userData2 = await authObj.getuser();

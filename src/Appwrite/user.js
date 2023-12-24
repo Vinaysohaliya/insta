@@ -15,14 +15,15 @@ export class userService {
         this.storage = new Storage(this.client);
     }
 
-    async createUser({ profileId, userId }) {
+    async createUser({ profileId, userId, name }) {
         try {
             return this.databases.createDocument(
                 config.appWriteDb,
                 config.appWriteUserCollection,
                 ID.unique(), {
                 profileId,
-                userId
+                userId,
+                name
             }
             )
         } catch (error) {
@@ -30,7 +31,20 @@ export class userService {
         }
     }
 
-  
+    async getAllUser() {
+        try {
+            return await this.databases.listDocuments(
+                config.appWriteDb,
+                config.appWriteUserCollection,
+            )
+        } catch (error) {
+            console.log(error);
+            throw error;
+        }
+    }
+
+
+
 }
 
 const userservice = new userService();

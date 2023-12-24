@@ -2,8 +2,9 @@
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { logout } from '../Redux/authSlice';
-import authObj from '../Appwrite/auth';
 import { Link } from 'react-router-dom';
+import userservice from '../Appwrite/user';
+
 
 const Header = () => {
   const dispatch = useDispatch();
@@ -21,14 +22,15 @@ const Header = () => {
   };
 
   useEffect(() => {
-    function AllUser() {
+    async function AllUser() {
       try {
-         authObj.AllUser();
+        const users= await userservice.getAllUser();
+        console.log(users);
       } catch (error) {
         console.log(error);
       }
     }
-    // AllUser();
+    AllUser();
   }, []);
 
   return (
