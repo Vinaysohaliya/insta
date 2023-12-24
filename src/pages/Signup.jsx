@@ -4,6 +4,7 @@ import { useDispatch } from 'react-redux';
 import authObj from '../Appwrite/auth.js';
 import { useNavigate } from 'react-router-dom';
 import service from '../Appwrite/post.js';
+import userservice, { userService } from '../Appwrite/user.js';
 
 const Signup = () => {
   const dispatch = useDispatch();
@@ -37,16 +38,20 @@ const Signup = () => {
     e.preventDefault();
     try {
       if (formData.img) {
-        // const file = await service.createFile(formData.img);
 
         const userData = await authObj.createAccount({
           name: formData.name,
           email: formData.email,
           password: formData.password,
-          // imgId: file.$id,
         });
+         
+        const file =formData.img && await service.createFile(formData.img);
 
-        if (userData) {
+
+
+const userCollection=userservice.createUser({profileId:file.$id,userId:userData.$id})
+
+        if (userData && userCollection) {
           const userData2 = await authObj.getuser();
           if (userData2) dispatch(login(userData2));
           navigate("/");

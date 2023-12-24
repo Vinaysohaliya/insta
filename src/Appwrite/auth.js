@@ -1,6 +1,5 @@
 import { Account, Client, ID } from 'appwrite'
 import config from '../config/config';
-
 export class Auth{
      client = new Client();
      account;
@@ -9,6 +8,8 @@ export class Auth{
         this.client.setProject(config.appWriteProject);
         this.account=new Account(this.client);
      }
+
+    
 
      async createAccount({email, password, name}) {
         try {

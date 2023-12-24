@@ -19,7 +19,7 @@ export class Service {
         try {
             return this.databases.createDocument(
                 config.appWriteDb,
-                config.appWriteCollection,
+                config.appWritePostCollection,
                 ID.unique(), {
                 img,
                 caption,
@@ -36,21 +36,21 @@ export class Service {
         try {
             return await this.databases.listDocuments(
                 config.appWriteDb,
-                config.appWriteCollection,
+                config.appWritePostCollection,
                 [Query.equal('userId', [userId])]
 
             )
-            console.log("SFfssasfaff");
         } catch (error) {
             console.log(error);
             return false;
         }
     }
     async getPosts() {
+
         try {
             return await this.databases.listDocuments(
                 config.appWriteDb,
-                config.appWriteCollection,
+                config.appWritePostCollection,
 
             )
         } catch (error) {
@@ -61,6 +61,7 @@ export class Service {
     async createFile(file) {
         try {
             console.log("dsssdf");
+            console.log(file);
             return this.storage.createFile(
                 config.appWriteBucket,
                 ID.unique(),

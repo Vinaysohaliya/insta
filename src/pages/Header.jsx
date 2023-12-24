@@ -1,5 +1,5 @@
 
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { logout } from '../Redux/authSlice';
 import authObj from '../Appwrite/auth';
@@ -19,6 +19,17 @@ const Header = () => {
         throw error;
     }
   };
+
+  useEffect(() => {
+    function AllUser() {
+      try {
+         authObj.AllUser();
+      } catch (error) {
+        console.log(error);
+      }
+    }
+    // AllUser();
+  }, []);
 
   return (
     <div className="flex justify-between p-4 bg-blue-500 text-white">
