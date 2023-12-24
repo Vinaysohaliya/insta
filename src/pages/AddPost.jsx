@@ -1,4 +1,3 @@
-// AddPostPage.js
 
 import React, { useState } from 'react';
 import { useSelector } from 'react-redux';
@@ -28,10 +27,11 @@ const AddPostPage = () => {
 
   const handleSubmit =async () => {
     try {
+        console.log(user);
         const file=postDetails.image && await service.createFile(postDetails.image);
         console.log(file);
         if (file) {
-            const post=await service.createPost({img:file.$id,location:postDetails.location,userId:user.userId,caption:postDetails.caption})
+            const post=await service.createPost({img:file.$id,location:postDetails.location,userId:user.$id,caption:postDetails.caption})
             console.log(post);
         }
     } catch (error) {

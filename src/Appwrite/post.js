@@ -1,12 +1,12 @@
-import { Account, Client, Databases, ID, Storage } from "appwrite";
+import { Account, Client, Databases, ID, Query, Storage } from "appwrite";
 import config from "../config/config";
 
 
 
-export class Service{
-     client = new Client();
-     databases;
-     storage;
+export class Service {
+    client = new Client();
+    databases;
+    storage;
     constructor() {
         this.client.setEndpoint(config.appWriteUrl)
         this.client.setProject(config.appWriteProject)
@@ -15,52 +15,67 @@ export class Service{
         this.storage = new Storage(this.client);
     }
 
-    async createPost({img,caption,location,userId}){
+    async createPost({ img, caption, location, userId }) {
         try {
-           return this.databases.createDocument(
+            return this.databases.createDocument(
                 config.appWriteDb,
                 config.appWriteCollection,
-                ID.unique(),{
-                    img,
-                    caption,
-                    location,
-                    userId
-                }
+                ID.unique(), {
+                img,
+                caption,
+                location,
+                userId
+            }
             )
         } catch (error) {
             console.log(error);
         }
     }
 
+    async getMyPosts(userId) {
+        try {
+            return await this.databases.listDocuments(
+                config.appWriteDb,
+                config.appWriteCollection,
+                [Query.equal('userId', [userId])]
+
+            )
+            console.log("SFfssasfaff");
+        } catch (error) {
+            console.log(error);
+            return false;
+        }
+    }
     async getPosts() {
         try {
             return await this.databases.listDocuments(
                 config.appWriteDb,
                 config.appWriteCollection,
+
             )
         } catch (error) {
             console.log(error);
             return false;
         }
     }
-
-    async createFile(file){
+    async createFile(file) {
         try {
-           return this.storage.createFile(
+            console.log("dsssdf");
+            return this.storage.createFile(
                 config.appWriteBucket,
                 ID.unique(),
                 file
             )
-            
+
         } catch (error) {
             console.log(error);
         }
     }
 
-    async getFilePreview(fileId){
+    async getFilePreview(fileId) {
         console.log(fileId);
         try {
-            return  this.storage.getFilePreview(
+            return this.storage.getFilePreview(
                 config.appWriteBucket,
                 fileId
             )
@@ -72,6 +87,6 @@ export class Service{
     }
 }
 
-const service=new Service();
+const service = new Service();
 
 export default service;

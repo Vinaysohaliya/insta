@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import service from '../Appwrite/post';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { setPost } from '../Redux/contentSlice';
 import PostCard from '../Components/PostCard';
 
 const AllPost = () => {
+  const user = useSelector((state)=>state.auth.userData);
+    
   const dispatch = useDispatch();
   const [posts, setPosts] = useState([]);
 
@@ -26,7 +28,7 @@ const AllPost = () => {
     <div>
       {posts &&
         posts.map((post) => (
-          <PostCard key={post.$id} caption={post.caption} featuredImage={post.img} location={post.location} />
+          <PostCard key={post.$id} name={user.name} caption={post.caption} featuredImage={post.img} location={post.location} />
         ))}
     </div>
   );

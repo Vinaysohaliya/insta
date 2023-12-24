@@ -3,29 +3,22 @@ import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import Signup from './pages/Signup';
 import Login from './pages/Login';
 import Home from './pages/Home';
-import { login } from './Redux/authSlice';
-import authObj from './Appwrite/auth';
+import { checkAuthentication } from './Redux/authSlice';
 import { useDispatch } from 'react-redux';
 import { useEffect } from 'react';
 import AddPost from './pages/AddPost';
 import AllPost from './pages/AllPost';
+import MyPost from './pages/myPost';
 
 
   
 function App() {
   const dispatch = useDispatch();
 
-  useEffect(() => {
 
-    authObj.getuser().then((data) => {
-      if (data) {
-        console.log(data);
-        dispatch(login(data ))
-      } else {
-        dispatch(logout())
-      }
-    })
-  }, []);
+  useEffect(() => {
+    dispatch(checkAuthentication());
+  }, [dispatch]);
 
 
   return (
@@ -36,6 +29,7 @@ function App() {
       <Route path="/login" element={<Login />} ></Route>
       <Route path="/addpost" element={<AddPost />} ></Route>
       <Route path="/allpost" element={<AllPost />} ></Route>
+      <Route path="/mypost" element={<MyPost />} ></Route>
         
       </Routes>
     </>

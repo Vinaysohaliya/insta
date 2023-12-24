@@ -1,4 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit'
+import authObj from '../Appwrite/auth';
 
 const initialState = {
   status:false,
@@ -19,6 +20,22 @@ export const authSlice = createSlice({
 }
   },
 })
+
+
+export const checkAuthentication = () => async (dispatch) => {
+  try {
+    const data = await authObj.getuser();
+    if (data) {
+      dispatch(login(data));
+    } else {
+      dispatch(logout());
+    }
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+
 
 export const { login,logout } = authSlice.actions
 

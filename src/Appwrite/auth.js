@@ -12,7 +12,9 @@ export class Auth{
 
      async createAccount({email, password, name}) {
         try {
+            
             const userAccount = await this.account.create(ID.unique(), email, password, name);
+            console.log(userAccount);
             if (userAccount) {
                 console.log("sign ok");
                 return this.login({email, password});
@@ -23,6 +25,7 @@ export class Auth{
             throw error;
         }
     }
+    
 
     async login({ email
         , password }) {
