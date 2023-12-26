@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { logout } from '../Redux/authSlice';
 import { Link } from 'react-router-dom';
 import userservice from '../Appwrite/user';
+import authObj from '../Appwrite/auth';
 
 
 const Header = () => {

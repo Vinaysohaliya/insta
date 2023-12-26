@@ -10,24 +10,20 @@ const MyPost = () => {
   const [posts, setPosts] = useState([]);
 
   useEffect(() => {
-    // Check if user details are available
     if (user) {
       async function fetchPosts() {
         try {
           const allPosts = await service.getMyPosts(user.$id);
-          console.log("oj");
           setPosts(allPosts.documents);
           dispatch(setPost(allPosts.documents));
         } catch (error) {
           console.log(error);
-          // Handle error gracefully if needed
         }
       }
 
-      // Call the function to fetch posts
       fetchPosts();
     }
-  }, [user, dispatch]); // Add user as a dependency
+  }, [user, dispatch]); 
 
   return (
     <div>
@@ -39,6 +35,7 @@ const MyPost = () => {
             caption={post.caption}
             featuredImage={post.img}
             location={post.location}
+            // userId={user.}
           />
         ))}
     </div>

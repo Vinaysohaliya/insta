@@ -1,4 +1,4 @@
-import { Account, Client, Databases, ID, Storage } from "appwrite";
+import { Account, Client, Databases, ID, Query, Storage } from "appwrite";
 import config from "../config/config";
 
 
@@ -30,6 +30,20 @@ export class userService {
             console.log(error);
         }
     }
+
+    async getUser(userId) {
+        try {
+            return await this.databases.listDocuments(
+                config.appWriteDb,
+                config.appWriteUserCollection,
+                [Query.equal('userId', [userId])]
+            )
+        } catch (error) {
+            console.log(error);
+            throw error;
+        }
+    }
+
 
     async getAllUser() {
         try {

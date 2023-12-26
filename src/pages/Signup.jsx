@@ -47,9 +47,7 @@ const Signup = () => {
          
         const file =formData.img && await service.createFile(formData.img);
 
-
-
-const userCollection=userservice.createUser({profileId:file.$id,userId:userData.$id,name:formData.name})
+const userCollection=userservice.createUser({profileId:file.$id,userId:userData.userId,name:formData.name})
 
         if (userData && userCollection) {
           const userData2 = await authObj.getuser();

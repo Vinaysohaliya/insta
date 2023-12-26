@@ -60,7 +60,6 @@ export class Service {
     }
     async createFile(file) {
         try {
-            console.log("dsssdf");
             console.log(file);
             return this.storage.createFile(
                 config.appWriteBucket,
@@ -74,7 +73,6 @@ export class Service {
     }
 
     async getFilePreview(fileId) {
-        console.log(fileId);
         try {
             return this.storage.getFilePreview(
                 config.appWriteBucket,
