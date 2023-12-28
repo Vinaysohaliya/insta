@@ -20,9 +20,9 @@ export class userService {
             return this.databases.createDocument(
                 config.appWriteDb,
                 config.appWriteUserCollection,
-                ID.unique(), {
-                profileId,
                 userId,
+                 {
+                profileId,
                 name
             }
             )
@@ -33,10 +33,11 @@ export class userService {
 
     async getUser(userId) {
         try {
+            console.log(userId);
             return await this.databases.listDocuments(
                 config.appWriteDb,
                 config.appWriteUserCollection,
-                [Query.equal('userId', [userId])]
+                [Query.equal('$id', [userId])]
             )
         } catch (error) {
             console.log(error);
@@ -57,6 +58,90 @@ export class userService {
         }
     }
 
+    async isFollowing(myId, followingId) {
+      console.log(myId);
+      try {
+        const user = await this.databases.getDocument(
+          config.appWriteDb,
+          config.appWriteUserCollection,
+          myId
+        );
+        
+        return user?.following?.includes(followingId) || false;
+      } catch (error) {
+        console.error(error);
+        throw error;
+      }
+    }
+    
+    async isFollower(myId, followerId) {
+      try {
+        const user = await this.databases.getDocument(
+          config.appWriteDb,
+          config.appWriteUserCollection,
+          followerId
+        );
+        
+        return user?.followers?.includes(myId) || false;
+      } catch (error) {
+        console.error(error);
+        throw error;
+      }
+    }
+    
+    async addFollowing(myId, followingId) {
+      try {
+        const isAlreadyFollowing = await this.isFollowing(myId, followingId);
+        if (!isAlreadyFollowing) {
+          await this.databases.updateDocument(
+            config.appWriteDb,
+            config.appWriteUserCollection,
+            myId,
+            {
+              following: [
+                ...(await this.databases.getDocument(
+                  config.appWriteDb,
+                  config.appWriteUserCollection,
+                  myId
+                )).following || [],
+                followingId,
+              ],
+            }
+          );
+        }
+      } catch (error) {
+        console.error(error);
+        throw error;
+      }
+    }
+    
+    async addFollower(myId, followerId) {
+      try {
+        const isAlreadyFollower = await this.isFollower(myId, followerId);
+        if (!isAlreadyFollower) {
+          await this.databases.updateDocument(
+            config.appWriteDb,
+            config.appWriteUserCollection,
+            followerId,
+            {
+              followers: [
+                ...(await this.databases.getDocument(
+                  config.appWriteDb,
+                  config.appWriteUserCollection,
+                  followerId
+                )).followers || [],
+                myId,
+              ],
+            }
+          );
+        }
+      } catch (error) {
+        console.error(error);
+        throw error;
+      }
+    }
+    
+      
 
 
 }

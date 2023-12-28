@@ -29,6 +29,7 @@ export const authSlice = createSlice({
 export const checkAuthentication = () => async (dispatch) => {
   try {
     const data = await authObj.getuser();
+    console.log(data);
     const user= await userService.getUser(data.$id);
     const profileImg=await service.getFilePreview(user.documents);
     console.log(profileImg.href);

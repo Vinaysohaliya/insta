@@ -5,7 +5,7 @@ import { setPost } from '../Redux/contentSlice';
 import PostCard from '../Components/PostCard';
 
 const AllPost = () => {
-  // const user = useSelector((state)=>state.auth.userData);
+  const myId = useSelector((state) => state.auth.userData?.$id);
   const dispatch = useDispatch();
   const [posts, setPosts] = useState([]);
 
@@ -13,15 +13,18 @@ const AllPost = () => {
     async function fetchPosts() {
       try {
         const allPosts = await service.getPosts();
-        
         setPosts(allPosts.documents);
-        dispatch(setPost(allPosts.documents));
       } catch (error) {
         console.log(error);
       }
     }
+
     fetchPosts();
   }, []);
+
+  useEffect(() => {
+    dispatch(setPost(posts));
+  }, [dispatch, posts]);
 
   return (
     <div>
@@ -33,6 +36,7 @@ const AllPost = () => {
             featuredImage={post.img}
             location={post.location}
             userId={post.userId}
+            myId={myId}
           />
         ))}
     </div>
