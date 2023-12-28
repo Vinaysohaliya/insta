@@ -6,7 +6,6 @@ import service from '../Appwrite/post';
 const initialState = {
   status:false,
   userData:null,
-  userImg:null,
 }
 
 export const authSlice = createSlice({
@@ -31,7 +30,8 @@ export const checkAuthentication = () => async (dispatch) => {
     const data = await authObj.getuser();
     console.log(data);
     const user= await userService.getUser(data.$id);
-    const profileImg=await service.getFilePreview(user.documents);
+    
+    const profileImg=await service.getFilePreview(user.documents[0].profileId);
     console.log(profileImg.href);
     data.profileImgHref = profileImg.href;
     

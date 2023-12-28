@@ -73,7 +73,34 @@ export class userService {
         throw error;
       }
     }
+
+    async countFollower(myId){
+      try {
+        const user = await this.databases.getDocument(
+          config.appWriteDb,
+          config.appWriteUserCollection,
+          myId
+        );
+        return user?.followers ? user.followers.length : 0;
+      } catch (error) {
+        console.log(error);
+        throw error;
+      }
+    }  
     
+    async countFollwing(myId){
+      try {
+        const user = await this.databases.getDocument(
+          config.appWriteDb,
+          config.appWriteUserCollection,
+          myId
+        );
+        return user?.following ? user.following.length : 0;
+      } catch (error) {
+        console.log(error);
+        throw error;
+      }
+    }  
     async isFollower(myId, followerId) {
       try {
         const user = await this.databases.getDocument(
@@ -137,6 +164,99 @@ export class userService {
         }
       } catch (error) {
         console.error(error);
+        throw error;
+      }
+    }
+    
+    async getMyFollower(myId){
+      try {
+        const user = await this.databases.getDocument(
+          config.appWriteDb,
+          config.appWriteUserCollection,
+          myId
+        );
+        return user?.followers ? user.followers: [];
+      } catch (error) {
+        console.log(error);
+        throw error;
+      }
+    }
+
+    
+    async getMyFollowing(myId){
+      try {
+        const user = await this.databases.getDocument(
+          config.appWriteDb,
+          config.appWriteUserCollection,
+          myId
+        );
+        return user?.following ? user.following: [];
+      } catch (error) {
+        console.log(error);
+        throw error;
+      }
+    }
+    
+    async unfollow(userId, myId) {
+      try {
+        const user = await this.databases.getDocument(
+          config.appWriteDb,
+          config.appWriteUserCollection,
+          myId
+        );
+    
+        if (!user) {
+          throw new Error(`User with ID ${myId} not found`);
+        }
+    
+        const followers = user.followers || [];
+    
+        const updatedFollowers = followers.filter((follower) => follower !== userId);
+    
+        await this.databases.updateDocument(
+          config.appWriteDb,
+          config.appWriteUserCollection,
+          myId,
+          {
+            followers: updatedFollowers,
+          }
+        );
+    
+        return updatedFollowers;
+      } catch (error) {
+        console.error('Error unfollowing:', error);
+        throw error;
+      }
+    }
+    
+    async remove(userId, myId) {
+      try {
+        const user = await this.databases.getDocument(
+          config.appWriteDb,
+          config.appWriteUserCollection,
+          myId
+        );
+    
+        if (!user) {
+          throw new Error(`User with ID ${myId} not found`);
+        }
+    
+        const followings = user.following || [];
+    
+        const updatedFollowings = followings.filter((following) => following !== userId);
+    
+        await this.databases.updateDocument(
+          config.appWriteDb,
+          config.appWriteUserCollection,
+          myId,
+          {
+            following: updatedFollowings,
+          }
+        );
+    
+        return updatedFollowings;
+      } catch (error) {
+        console.error('Error unfollowing:', error);
         throw error;
       }
     }

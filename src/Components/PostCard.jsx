@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import service from '../Appwrite/post';
 import userService from '../Appwrite/user';
 
-const PostCard = ({ featuredImage, location, caption, userId, myId ,u}) => {
+const PostCard = ({ featuredImage, location, caption, userId, myId }) => {
   const [filePreview, setFilePreview] = useState(null);
   const [user, setUser] = useState(null);
   const [profileImg, setProfileImg] = useState(null);
