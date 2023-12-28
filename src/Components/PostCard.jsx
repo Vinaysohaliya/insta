@@ -16,7 +16,7 @@ const PostCard = ({ featuredImage, location, caption, userId, myId }) => {
         if (myId) {
           console.log('Effect triggered');
           const userResult = await userService.getUser(userId);
-          setUser(userResult);
+          setUser(userResult.documents[0]);
   
           const img = await service.getFilePreview(featuredImage);
           setFilePreview(img.href);
@@ -26,6 +26,7 @@ const PostCard = ({ featuredImage, location, caption, userId, myId }) => {
   
           const isFollowingValue = await userService.isFollowing(myId, userId);
           setIsFollowing(isFollowingValue);
+
         }
       } catch (error) {
         console.error(error);
@@ -53,7 +54,8 @@ const PostCard = ({ featuredImage, location, caption, userId, myId }) => {
     <div className="max-w-md mx-auto bg-white shadow-lg rounded-md overflow-hidden my-4">
       <div className="p-4">
         <div className="mb-2">
-          <p className="font-bold">{user?.name}</p>
+         
+        {user &&  <p className="font-bold">{user?.name}</p> }
         </div>
         <div className="flex items-center mb-2">
           <p className="text-gray-600">{location}</p>

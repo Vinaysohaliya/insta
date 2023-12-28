@@ -21,9 +21,9 @@ const MyFollower = () => {
         fetchFollowers();
     }, [userId]);
 
-    async function handleUnfollow(followerId, userId) {
+    async function handleRemove(followerId, userId) {
         try {
-            await userservice.unfollow(followerId, userId);
+            await userservice.removefollower(followerId, userId);
             window.location.reload();
         } catch (error) {
             console.log(error);
@@ -38,7 +38,7 @@ const MyFollower = () => {
                 {followers.map((follower) => (
                     <li key={follower}>
                         <UserShortProfile followerId={follower} myId={userId} />
-                        <button onClick={() => handleUnfollow(follower, userId)}>Unfollow</button>
+                        <button onClick={() => handleRemove(follower, userId)}>Remove</button>
                     </li>
                 ))}
             </ul>

@@ -13,6 +13,7 @@ const MyFollowing = () => {
                 const followingsData = await userservice.getMyFollowing(userId);
                 console.log(followingsData);
                 setFollowings(followingsData);
+
             } catch (error) {
                 console.error('Error fetching followers:', error);
             }
@@ -23,7 +24,7 @@ const MyFollowing = () => {
 
     async function handleRemove(followingId, userId) {
         try {
-            await userservice.remove(followingId, userId);
+            await userservice.unfollowUser(followingId, userId);
             window.location.reload();
         } catch (error) {
             console.log(error);

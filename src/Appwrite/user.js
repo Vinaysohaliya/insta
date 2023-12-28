@@ -197,64 +197,98 @@ export class userService {
       }
     }
     
-    async unfollow(userId, myId) {
+    async unfollowUser(userId, myId) {
       try {
-        const user = await this.databases.getDocument(
+        const MyDoc = await this.databases.getDocument(
           config.appWriteDb,
           config.appWriteUserCollection,
           myId
         );
+
+        const userDoc = await this.databases.getDocument(
+          config.appWriteDb,
+          config.appWriteUserCollection,
+          userId
+        );
     
-        if (!user) {
+        if (!(MyDoc || userDoc)) {
           throw new Error(`User with ID ${myId} not found`);
         }
     
-        const followers = user.followers || [];
+        const MyFollowings =  MyDoc.following || [];
+        const UserFollowers =  userDoc.followers || [];
     
-        const updatedFollowers = followers.filter((follower) => follower !== userId);
+        const  updatedUserFollowers= UserFollowers.filter((follower) => follower !== myId);
+        const updatedMyFollowings = MyFollowings.filter((following) => following!== userId);
     
         await this.databases.updateDocument(
           config.appWriteDb,
           config.appWriteUserCollection,
           myId,
           {
-            followers: updatedFollowers,
+            following: updatedMyFollowings,
+          }
+        );
+
+        await this.databases.updateDocument(
+          config.appWriteDb,
+          config.appWriteUserCollection,
+          userId,
+          {
+            followers: updatedUserFollowers,
           }
         );
     
-        return updatedFollowers;
+        return [updatedMyFollowings,updatedUserFollowers];
       } catch (error) {
         console.error('Error unfollowing:', error);
         throw error;
       }
     }
     
-    async remove(userId, myId) {
+    async removefollower(userId, myId) {
       try {
-        const user = await this.databases.getDocument(
+        const MyDoc = await this.databases.getDocument(
           config.appWriteDb,
           config.appWriteUserCollection,
           myId
         );
+
+        const userDoc = await this.databases.getDocument(
+          config.appWriteDb,
+          config.appWriteUserCollection,
+          userId
+        );
     
-        if (!user) {
+        if (!(MyDoc || userDoc)) {
           throw new Error(`User with ID ${myId} not found`);
         }
+    console.log("dg");
+        const MyFollowers =  MyDoc.followers || [];
+        const UserFollowings =  userDoc.following || [];
     
-        const followings = user.following || [];
-    
-        const updatedFollowings = followings.filter((following) => following !== userId);
+        const  updatedMyFollowers= MyFollowers.filter((follower) => follower !== userId);
+        const updatedUserFollowings = UserFollowings.filter((following) => following!== myId);
     
         await this.databases.updateDocument(
           config.appWriteDb,
           config.appWriteUserCollection,
           myId,
           {
-            following: updatedFollowings,
+            followers: updatedMyFollowers,
           }
         );
-    
-        return updatedFollowings;
+
+        await this.databases.updateDocument(
+          config.appWriteDb,
+          config.appWriteUserCollection,
+          userId,
+          {
+            following: updatedUserFollowings,
+          }
+        );
+    console.log("SD");
+        return [updatedMyFollowers,updatedUserFollowings];
       } catch (error) {
         console.error('Error unfollowing:', error);
         throw error;
