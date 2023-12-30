@@ -13,6 +13,7 @@ const AllPost = () => {
     async function fetchPosts() {
       try {
         const allPosts = await service.getPosts();
+        console.log(allPosts);
         setPosts(allPosts.documents);
       } catch (error) {
         console.log(error);
@@ -37,6 +38,7 @@ const AllPost = () => {
             location={post.location}
             userId={post.userId}
             myId={myId}
+            documentsId={post.$id}
           />
         ))}
     </div>

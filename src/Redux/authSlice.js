@@ -1,11 +1,11 @@
 import { createSlice } from '@reduxjs/toolkit'
 import authObj from '../Appwrite/auth';
-import userService  from '../Appwrite/user';
+import userService from '../Appwrite/user';
 import service from '../Appwrite/post';
 
 const initialState = {
-  status:false,
-  userData:null,
+  status: false,
+  userData: null,
 }
 
 export const authSlice = createSlice({
@@ -13,14 +13,14 @@ export const authSlice = createSlice({
   initialState,
   reducers: {
 
-   login:(state,action)=>{
-    state.status=true,
-    state.userData=action.payload;
-   },
-   logout:(state)=>{
-    state.status=false;
-    state.userData=null;
-}
+    login: (state, action) => {
+      state.status = true,
+        state.userData = action.payload;
+    },
+    logout: (state) => {
+      state.status = false;
+      state.userData = null;
+    }
   },
 })
 
@@ -28,13 +28,12 @@ export const authSlice = createSlice({
 export const checkAuthentication = () => async (dispatch) => {
   try {
     const data = await authObj.getuser();
-    console.log(data);
-    const user= await userService.getUser(data.$id);
-    
-    const profileImg=await service.getFilePreview(user.documents[0].profileId);
+    const user = await userService.getUser(data.$id);
+console.log(user);
+    const profileImg = await service.getFilePreview(user.documents[0].profileId);
     console.log(profileImg.href);
     data.profileImgHref = profileImg.href;
-    
+
     if (data && profileImg) {
       dispatch(login(data));
     } else {
@@ -47,6 +46,6 @@ export const checkAuthentication = () => async (dispatch) => {
 
 
 
-export const { login,logout } = authSlice.actions
+export const { login, logout } = authSlice.actions
 
 export default authSlice.reducer

@@ -71,7 +71,6 @@ export class Service {
             console.log(error);
         }
     }
-
     async getFilePreview(fileId) {
         try {
             return this.storage.getFilePreview(
@@ -84,6 +83,75 @@ export class Service {
             throw error;
         }
     }
+
+    async getLike(documentsId){
+        try {
+            const post=await this.databases.getDocument(
+                config.appWriteDb,
+                config.appWritePostCollection,
+                documentsId
+            )
+            if (!post) {
+                throw error;
+            }
+
+            return post?.like? post.like.length : 0;
+
+            
+        } catch (error) {
+            console.log(error);
+            throw error;
+        }
+    }
+
+    async addLike(documentId, myId) {
+        try {
+            const post = await this.databases.getDocument(
+                config.appWriteDb,
+                config.appWritePostCollection,
+                documentId
+            );
+    
+            if (!post) {
+                throw new Error("Post not found");
+            }
+    
+            const currentLikes = post?.like ? post.like : [];
+    
+            if (!currentLikes.includes(myId)) {
+                const updatedLikes = [...currentLikes, myId];
+    
+                await this.databases.updateDocument(
+                    config.appWriteDb,
+                    config.appWritePostCollection,
+                    documentId,
+                    {
+                        like: updatedLikes,
+                    }
+                );
+    
+                return updatedLikes;
+            } else {
+                const updatedLikes = currentLikes.filter((likedId) => likedId !== myId);
+    
+                await this.databases.updateDocument(
+                    config.appWriteDb,
+                    config.appWritePostCollection,
+                    documentId,
+                    {
+                        like: updatedLikes,
+                    }
+                );
+    
+                return updatedLikes;
+            }
+        } catch (error) {
+            console.error(error);
+            throw error;
+        }
+    }
+    
+      
 }
 
 const service = new Service();

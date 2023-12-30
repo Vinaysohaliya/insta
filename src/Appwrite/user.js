@@ -32,18 +32,18 @@ export class userService {
     }
 
     async getUser(userId) {
-        try {
-            console.log(userId);
-            return await this.databases.listDocuments(
-                config.appWriteDb,
-                config.appWriteUserCollection,
-                [Query.equal('$id', [userId])]
-            )
-        } catch (error) {
-            console.log(error);
-            throw error;
-        }
-    }
+      try {
+          console.log(userId);
+          return await this.databases.listDocuments(
+              config.appWriteDb,
+              config.appWriteUserCollection,
+              [Query.equal('$id', [userId])]
+          )
+      } catch (error) {
+          console.log(error);
+          throw error;
+      }
+  }
 
 
     async getAllUser() {
@@ -59,7 +59,6 @@ export class userService {
     }
 
     async isFollowing(myId, followingId) {
-      console.log(myId);
       try {
         const user = await this.databases.getDocument(
           config.appWriteDb,
