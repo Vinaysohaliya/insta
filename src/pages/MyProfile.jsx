@@ -3,70 +3,80 @@ import { useSelector } from 'react-redux';
 import userService from '../Appwrite/user';
 import service from '../Appwrite/post';
 import OnlyImg from '../Components/OnlyImg';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 
 const MyProfile = () => {
-    const [profileImg, setProfileImg] = useState(null);
-    const [followerCount, setFollowerCount] = useState(0);
-    const [followingCount, setFollowingCount] = useState(0);
-    const { userData } = useSelector((state) => state.auth);
-    const [mypost, setMyPost] = useState([]);
+  const authUser = useSelector((state) => state.auth.userData);
+  const [user, setUser] = useState(null);
+  const [profileImg, setProfileImg] = useState(null);
+  const [followerCount, setFollowerCount] = useState(0);
+  const [followingCount, setFollowingCount] = useState(0);
+  const [mypost, setMyPost] = useState([]);
 
-    useEffect(() => {
-        async function fetchUserDetails() {
-            if (userData) {
-                const { profileImgHref, $id, name } = userData;
+  const location = useLocation();
+  const userId = location.state?.userId;
 
-                setProfileImg(profileImgHref);
+  // Use userId if provided, otherwise use authenticated user's ID
+  const targetUserId = userId || (authUser && authUser.$id);
 
-                try {
-                    const followerCount = await userService.countFollower($id);
-                    const followingCount = await userService.countFollwing($id);
+ console.log(userId);
 
-                    setFollowerCount(followerCount);
-                    setFollowingCount(followingCount);
+  useEffect(() => {
+    async function fetchUserDetails() {
+      if (targetUserId) {
+        try {
+          const userResult = await userService.getUser(targetUserId);
+          setUser(userResult.documents[0]);
 
-                    const post = await service.getMyPosts($id);
-                    console.log(post);
-                    setMyPost(post.documents);
-                } catch (error) {
-                    console.error(error);
-                }
-            }
+          const profileImgResult = await service.getFilePreview(userResult.documents[0].profileId);
+          setProfileImg(profileImgResult.href);
+
+          const followerCount = await userService.countFollower(targetUserId);
+          const followingCount = await userService.countFollwing(targetUserId);
+
+          setFollowerCount(followerCount);
+          setFollowingCount(followingCount);
+
+          const post = await service.getMyPosts(targetUserId);
+          setMyPost(post.documents);
+        } catch (error) {
+          console.error(error);
         }
+      }
+    }
 
-        fetchUserDetails();
-    }, [userData]);
+    fetchUserDetails();
+  }, [targetUserId]);
 
-    return (
-        <div className="flex items-center justify-center space-x-8 p-4">
-            <div className="max-w-xs">
-                {profileImg && <img className="rounded-full" src={profileImg} alt="Profile Image" />}
-            </div>
-            <div>
-                {userData ? (
-                    <>
-                        <p className="text-xl font-semibold">{userData.name}</p>
-                        {userData.$id && (
-                            <Link to={`/myfollower/${userData.$id}`} className="text-gray-600 hover:underline">
-                                Followers: {followerCount}
-                            </Link>
-                        )}
-                        <Link to={`/myfollowing/${userData.$id}`}  className="text-gray-600 hover:underline">
-                            Following: {followingCount}
-                        </Link>
-                    </>
-                ) : (
-                    <p>Loading user data...</p>
-                )}
-            </div>
-            {mypost.map((post) => (
-                <div key={post.$id}>
-                    <OnlyImg featuredImage={post.img} />
-                </div>
-            ))}
+  return (
+    <div className="flex items-center justify-center space-x-8 p-4">
+      <div className="max-w-xs">
+        {profileImg && <img className="rounded-full" src={profileImg} alt="Profile Image" />}
+      </div>
+      <div>
+        {user ? (
+          <>
+            <p className="text-xl font-semibold">{user.name}</p>
+            {targetUserId && (
+              <Link to={`/myfollower/${targetUserId}`} className="text-gray-600 hover:underline">
+                Followers: {followerCount}
+              </Link>
+            )}
+            <Link to={`/myfollowing/${targetUserId}`} className="text-gray-600 hover:underline">
+              Following: {followingCount}
+            </Link>
+          </>
+        ) : (
+          <p>Loading user data...</p>
+        )}
+      </div>
+      {mypost.map((post) => (
+        <div key={post.$id}>
+          <OnlyImg featuredImage={post.img} />
         </div>
-    );
+      ))}
+    </div>
+  );
 };
 
 export default MyProfile;

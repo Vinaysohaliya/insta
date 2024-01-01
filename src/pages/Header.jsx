@@ -5,6 +5,7 @@ import { logout } from '../Redux/authSlice';
 import { Link } from 'react-router-dom';
 import userservice from '../Appwrite/user';
 import authObj from '../Appwrite/auth';
+import MyProfile from './MyProfile';
 
 
 const Header = () => {
@@ -47,6 +48,8 @@ const Header = () => {
               Logout
             </button>
             <Link to='/addpost'>AddPost</Link>
+            <Link to='/profile'>
+            </Link>
           </>
         ) : (
           <Link to="/login">Login</Link>

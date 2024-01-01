@@ -6,6 +6,7 @@ import Header from '../pages/Header';
 import PostCard from '../Components/PostCard';
 import Signup from './Signup';
 import { Link } from 'react-router-dom';
+import Skeleton from 'react-loading-skeleton';
 
 const Home = () => {
   const [followedUsers, setFollowedUsers] = useState([]);

@@ -78,11 +78,12 @@ const AddPostPage = () => {
       )}
 
       <button
-        onClick={handleSubmit}
-        className="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-700 focus:outline-none"
-      >
-        Share
-      </button>
+  onClick={handleSubmit}
+  className="bg-white border-2 border-black py-2 px-4 rounded hover:bg-blue-100 focus:outline-none transition-colors duration-300"
+>
+  Share
+</button>
+
     </div>
   );
 };

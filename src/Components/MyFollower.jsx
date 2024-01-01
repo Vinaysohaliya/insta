@@ -2,9 +2,12 @@ import React, { useEffect, useState } from 'react';
 import userservice from '../Appwrite/user';
 import { useParams } from 'react-router-dom';
 import UserShortProfile from './UserShortProfile';
+import { useSelector } from 'react-redux';
 
 const MyFollower = () => {
     const { userId } = useParams();
+    const { userData } = useSelector((state) => state.auth);
+
     const [followers, setFollowers] = useState([]);
 
     useEffect(() => {
@@ -38,7 +41,10 @@ const MyFollower = () => {
                 {followers.map((follower) => (
                     <li key={follower}>
                         <UserShortProfile followerId={follower} myId={userId} />
-                        <button onClick={() => handleRemove(follower, userId)}>Remove</button>
+                        
+                        {(userData.$id === userId)?<button onClick={() => handleRemove(follower, userId)}>Remove</button>:null}
+                        
+                        
                     </li>
                 ))}
             </ul>

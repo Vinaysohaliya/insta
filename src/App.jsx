@@ -33,7 +33,7 @@ function App() {
         <Route path="/addpost" element={<AddPost />} ></Route>
         <Route path="/allpost" element={<AllPost />} ></Route>
         <Route path="/mypost" element={<MyPost />} ></Route>
-        <Route path="/myprofile" element={<MyProfile/>} ></Route>
+        <Route path="/profile" element={<MyProfile/>} ></Route>
         <Route path="/myfollower/:userId" element={<MyFollower />} ></Route>
         <Route path="/myfollowing/:userId" element={<MyFollowing />} ></Route>
         

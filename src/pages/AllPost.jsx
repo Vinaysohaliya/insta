@@ -32,6 +32,7 @@ const AllPost = () => {
       {posts &&
         posts.map((post) => (
           <PostCard
+            createdPost={post.$createdAt}
             key={post.$id}
             caption={post.caption}
             featuredImage={post.img}
