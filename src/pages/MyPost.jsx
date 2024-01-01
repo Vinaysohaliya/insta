@@ -29,13 +29,15 @@ const MyPost = () => {
     <div>
       {posts &&
         posts.map((post) => (
+          
           <PostCard
             key={post.$id}
-            name={user ? user.name : ''}
             caption={post.caption}
             featuredImage={post.img}
             location={post.location}
-            // userId={user.}
+            userId={post.userId}
+            myId={user.$id}
+            documentsId={post.$id}
           />
         ))}
     </div>

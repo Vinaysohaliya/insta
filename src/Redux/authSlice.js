@@ -29,9 +29,7 @@ export const checkAuthentication = () => async (dispatch) => {
   try {
     const data = await authObj.getuser();
     const user = await userService.getUser(data.$id);
-console.log(user);
     const profileImg = await service.getFilePreview(user.documents[0].profileId);
-    console.log(profileImg.href);
     data.profileImgHref = profileImg.href;
 
     if (data && profileImg) {

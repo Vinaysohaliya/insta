@@ -37,7 +37,7 @@ const Header = () => {
   return (
     <div className="flex justify-between p-4 bg-blue-500 text-white">
       <div>
-        <h1 className="text-lg font-bold">Your App Name</h1>
+        <h1 className="text-lg font-bold">Insta</h1>
       </div>
       <div>
         {userStatus ? (

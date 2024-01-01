@@ -33,7 +33,6 @@ export class userService {
 
     async getUser(userId) {
       try {
-          console.log(userId);
           return await this.databases.listDocuments(
               config.appWriteDb,
               config.appWriteUserCollection,
@@ -168,6 +167,7 @@ export class userService {
     }
     
     async getMyFollower(myId){
+      console.log(myId);
       try {
         const user = await this.databases.getDocument(
           config.appWriteDb,

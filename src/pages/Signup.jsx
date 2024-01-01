@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { login } from '../Redux/authSlice';
 import { useDispatch } from 'react-redux';
 import authObj from '../Appwrite/auth.js';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import service from '../Appwrite/post.js';
 import userservice, { userService } from '../Appwrite/user.js';
 
@@ -44,10 +44,10 @@ const Signup = () => {
           email: formData.email,
           password: formData.password,
         });
-         
-        const file =formData.img && await service.createFile(formData.img);
 
-const userCollection=userservice.createUser({profileId:file.$id,userId:userData.userId,name:formData.name})
+        const file = formData.img && await service.createFile(formData.img);
+
+        const userCollection = userservice.createUser({ profileId: file.$id, userId: userData.userId, name: formData.name })
 
         if (userData && userCollection) {
           const userData2 = await authObj.getuser();
@@ -62,7 +62,7 @@ const userCollection=userservice.createUser({profileId:file.$id,userId:userData.
 
   return (
     <div className="flex items-center justify-center h-screen bg-gray-100">
-      <div className="bg-white p-8 rounded shadow-md w-96">
+      <div className="bg-white p-8 flex flex-col items-center justify-center rounded shadow-md w-96">
         <h2 className="text-3xl font-bold mb-6 text-center">Sign up to Instagram</h2>
         <form onSubmit={handleSubmit}>
           <label>Profile Img</label>
@@ -107,6 +107,11 @@ const userCollection=userservice.createUser({profileId:file.$id,userId:userData.
             Sign Up
           </button>
         </form>
+        <div className=' flex flex-col justify-center items-center'>
+          <p>Have an Account? </p>
+          <Link to='/login' className=' hover:text-blue-500'>Login</Link>
+
+        </div>
         <p className="mt-4 text-center text-sm text-gray-600">
           By signing up, you agree to our Terms, Data Policy, and Cookies Policy.
         </p>

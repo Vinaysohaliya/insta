@@ -104,6 +104,27 @@ export class Service {
         }
     }
 
+    async isLiked(documentsId,myId){
+        try {
+            const post=await this.databases.getDocument(
+                config.appWriteDb,
+                config.appWritePostCollection,
+                documentsId
+            )
+            if (!post) {
+                throw error;
+            }
+
+            
+            const currentLikes = post?.like ? post.like : [];
+            return currentLikes.includes(myId);
+            
+        } catch (error) {
+            console.log(error);
+            throw error;
+        }
+    }
+
     async addLike(documentId, myId) {
         try {
             const post = await this.databases.getDocument(
@@ -150,6 +171,7 @@ export class Service {
             throw error;
         }
     }
+
     
       
 }
