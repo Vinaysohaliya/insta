@@ -41,10 +41,14 @@ const MyFollower = () => {
                 {followers.map((follower) => (
                     <li key={follower}>
                         <UserShortProfile followerId={follower} myId={userId} />
-                        
-                        {(userData.$id === userId)?<button onClick={() => handleRemove(follower, userId)}>Remove</button>:null}
-                        
-                        
+
+                        {userData && (
+                            <div>
+                                {(userData.$id === userId) ? <button onClick={() => handleRemove(follower, userId)}>Remove</button> : null}
+
+                            </div>
+                        )}
+
                     </li>
                 ))}
             </ul>

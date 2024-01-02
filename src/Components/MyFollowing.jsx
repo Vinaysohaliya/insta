@@ -2,13 +2,16 @@ import React, { useEffect, useState } from 'react';
 import userservice from '../Appwrite/user';
 import { useParams } from 'react-router-dom';
 import UserShortProfile from './UserShortProfile';
+import { useSelector } from 'react-redux';
 
 const MyFollowing = () => {
     const { userId } = useParams();
     const [followings, setFollowings] = useState([]);
 
+    const { userData } = useSelector((state) => state.auth);
+
     useEffect(() => {
-        const fetchFollowers = async () => {
+        const fetchFollowings = async () => {
             try {
                 const followingsData = await userservice.getMyFollowing(userId);
                 console.log(followingsData);
@@ -19,8 +22,8 @@ const MyFollowing = () => {
             }
         };
 
-        fetchFollowers();
-    }, [userId]);
+        fetchFollowings();
+    }, [userId,userData]);
 
     async function handleRemove(followingId, userId) {
         try {
@@ -31,7 +34,6 @@ const MyFollowing = () => {
             throw error;
         }
     }
-
     return (
         <div>
             <h2>Followers for User {userId}</h2>
@@ -39,7 +41,12 @@ const MyFollowing = () => {
                 {followings.map((following) => (
                     <li key={following}>
                         <UserShortProfile followerId={following} myId={userId} />
-                        <button onClick={() => handleRemove(following, userId)}>Remove</button>
+                        {userData && (
+                            <div>
+                        {(userData.$id === userId)?<button onClick={() => handleRemove(following, userId)}>Unfollow</button>:null}
+
+                            </div>
+                        )}
                     </li>
                 ))}
             </ul>

@@ -16,10 +16,8 @@ const MyProfile = () => {
   const location = useLocation();
   const userId = location.state?.userId;
 
-  // Use userId if provided, otherwise use authenticated user's ID
   const targetUserId = userId || (authUser && authUser.$id);
 
- console.log(userId);
 
   useEffect(() => {
     async function fetchUserDetails() {

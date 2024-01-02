@@ -6,8 +6,7 @@ import service from '../Appwrite/post';
 
 const AddPostPage = () => {
 
-
-  const user = useSelector((state)=>state.auth.userData);
+  const user = useSelector((state) => state.auth.userData);
 
   const [postDetails, setPostDetails] = useState({
     image: null,
@@ -25,17 +24,19 @@ const AddPostPage = () => {
     setPostDetails({ ...postDetails, image: file });
   };
 
-  const handleSubmit =async () => {
+  const handleSubmit = async () => {
     try {
-        console.log(user);
-        const file=postDetails.image && await service.createFile(postDetails.image);
-        console.log(file);
-        if (file) {
-            const post=await service.createPost({img:file.$id,location:postDetails.location,userId:user.$id,caption:postDetails.caption})
-            console.log(post);
-        }
+      console.log(user);
+      const file = postDetails.image && await service.createFile(postDetails.image);
+      console.log(file);
+      if (file) {
+        const post = await service.createPost({ img: file.$id, location: postDetails.location, userId: user.$id, caption: postDetails.caption })
+        console.log(post);
+      }
     } catch (error) {
-        console.log(error);
+      console.log(error);
+    }finally{
+      history.back()
     }
 
 
@@ -78,11 +79,11 @@ const AddPostPage = () => {
       )}
 
       <button
-  onClick={handleSubmit}
-  className="bg-white border-2 border-black py-2 px-4 rounded hover:bg-blue-100 focus:outline-none transition-colors duration-300"
->
-  Share
-</button>
+        onClick={handleSubmit}
+        className="bg-white border-2 border-black py-2 px-4 rounded hover:bg-blue-100 focus:outline-none transition-colors duration-300"
+      >
+        Share
+      </button>
 
     </div>
   );

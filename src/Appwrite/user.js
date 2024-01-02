@@ -44,6 +44,18 @@ export class userService {
       }
   }
 
+  async getUserbyName(userName) {
+    try {
+        return await this.databases.listDocuments(
+            config.appWriteDb,
+            config.appWriteUserCollection,
+            [Query.startsWith('name', [userName])]
+        )
+    } catch (error) {
+        console.log(error);
+        throw error;
+    }
+}
 
     async getAllUser() {
         try {

@@ -6,6 +6,7 @@ import { Link } from 'react-router-dom';
 import userservice from '../Appwrite/user';
 import authObj from '../Appwrite/auth';
 import MyProfile from './MyProfile';
+import Search from '../Components/Search';
 
 
 const Header = () => {
@@ -47,6 +48,7 @@ const Header = () => {
             <button onClick={handleLogout} className="underline cursor-pointer">
               Logout
             </button>
+            <Search/>
             <Link to='/addpost'>AddPost</Link>
             <Link to='/profile'>
             </Link>
