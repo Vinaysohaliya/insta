@@ -12,7 +12,7 @@ import { checkAuthentication } from './Redux/authSlice';
 import { useDispatch } from 'react-redux';
 import { useEffect } from 'react';
 import MyProfile from './pages/MyProfile';
-import MyFollower from './Components/myFollower';
+import MyFollower from './Components/MyFollower';
 import MyFollowing from './Components/MyFollowing';
 
 function App() {
