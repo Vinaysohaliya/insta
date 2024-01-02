@@ -18,7 +18,6 @@ const MyProfile = () => {
 
   const targetUserId = userId || (authUser && authUser.$id);
 
-
   useEffect(() => {
     async function fetchUserDetails() {
       if (targetUserId) {
@@ -49,18 +48,24 @@ const MyProfile = () => {
   return (
     <div className="flex items-center justify-center space-x-8 p-4">
       <div className="max-w-xs">
-        {profileImg && <img className="rounded-full" src={profileImg} alt="Profile Image" />}
+        {profileImg && (
+          <img
+            className="rounded-full h-32 w-32 object-cover border-4 border-white"
+            src={profileImg}
+            alt="Profile Image"
+          />
+        )}
       </div>
-      <div>
+      <div className="text-left">
         {user ? (
           <>
-            <p className="text-xl font-semibold">{user.name}</p>
+            <p className="text-2xl font-semibold">{user.name}</p>
             {targetUserId && (
               <Link to={`/myfollower/${targetUserId}`} className="text-gray-600 hover:underline">
                 Followers: {followerCount}
               </Link>
             )}
-            <Link to={`/myfollowing/${targetUserId}`} className="text-gray-600 hover:underline">
+            <Link to={`/myfollowing/${targetUserId}`} className="block text-gray-600 hover:underline">
               Following: {followingCount}
             </Link>
           </>
@@ -68,11 +73,13 @@ const MyProfile = () => {
           <p>Loading user data...</p>
         )}
       </div>
-      {mypost.map((post) => (
-        <div key={post.$id}>
-          <OnlyImg featuredImage={post.img} />
-        </div>
-      ))}
+      <div className="grid grid-cols-3 gap-2 mt-4">
+        {mypost.map((post) => (
+          <div key={post.$id} className="overflow-hidden">
+            <OnlyImg featuredImage={post.img} documentId={post.$id} myId={authUser.$id} userId={targetUserId} />
+          </div>
+        ))}
+      </div>
     </div>
   );
 };

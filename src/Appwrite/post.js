@@ -84,6 +84,31 @@ export class Service {
         }
     }
 
+    async deleteFile(fileId){
+        try {
+           return this.storage.deleteFile(
+                config.appWriteBucket,
+                fileId
+            )
+        } catch (error) {
+            console.log(error);
+            throw error;
+        }
+    }
+
+    async deletePost(documentId){
+        try {
+           return this.databases.deleteDocument(
+                config.appWriteDb,
+                config.appWritePostCollection,
+                documentId
+            );
+        } catch (error) {
+            console.log(error);
+            throw error;
+        }
+    }
+
     async getLike(documentsId){
         try {
             const post=await this.databases.getDocument(
