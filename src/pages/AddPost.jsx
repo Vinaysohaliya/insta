@@ -1,12 +1,11 @@
-
 import React, { useState } from 'react';
 import { useSelector } from 'react-redux';
 import service from '../Appwrite/post';
-
+import { useNavigate } from 'react-router-dom';
 
 const AddPostPage = () => {
-
   const user = useSelector((state) => state.auth.userData);
+  const navigate = useNavigate();
 
   const [postDetails, setPostDetails] = useState({
     image: null,
@@ -26,32 +25,38 @@ const AddPostPage = () => {
 
   const handleSubmit = async () => {
     try {
-      console.log(user);
-      const file = postDetails.image && await service.createFile(postDetails.image);
-      console.log(file);
+      const file = postDetails.image && (await service.createFile(postDetails.image));
       if (file) {
-        const post = await service.createPost({ img: file.$id, location: postDetails.location, userId: user.$id, caption: postDetails.caption })
-        console.log(post);
+        const post = await service.createPost({
+          img: file.$id,
+          location: postDetails.location,
+          userId: user.$id,
+          caption: postDetails.caption,
+        });
       }
     } catch (error) {
       console.log(error);
-    }finally{
-      history.back()
+    } finally {
+      navigate('/');
     }
-
-
   };
 
   return (
-    <div className="max-w-2xl mx-auto p-4">
+    <div className="max-w-xl mx-auto p-4">
       <h1 className="text-2xl font-semibold mb-4">Add Post</h1>
 
-      <input
-        type="file"
-        accept="image/*"
-        onChange={handleImageChange}
-        className="mb-4 w-full p-2 border border-gray-300 rounded"
-      />
+      <label htmlFor="image" className="block mb-4 cursor-pointer">
+        <input
+          type="file"
+          accept="image/*"
+          id="image"
+          onChange={handleImageChange}
+          className="hidden"
+        />
+        <div className="bg-gray-200 p-4 rounded-lg text-center">
+          {postDetails.image ? 'Image Selected' : 'Choose an Image'}
+        </div>
+      </label>
 
       <textarea
         name="caption"
@@ -80,11 +85,10 @@ const AddPostPage = () => {
 
       <button
         onClick={handleSubmit}
-        className="bg-white border-2 border-black py-2 px-4 rounded hover:bg-blue-100 focus:outline-none transition-colors duration-300"
+        className=" border-2 border-black  py-2 px-4 rounded hover:bg-slate-400 focus:outline-none transition-colors duration-300"
       >
         Share
       </button>
-
     </div>
   );
 };

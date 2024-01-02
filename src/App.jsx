@@ -6,7 +6,7 @@ import Home from './pages/Home';
 
 import AddPost from './pages/AddPost';
 import AllPost from './pages/AllPost';
-import MyPost from './pages/myPost';
+import MyPost from './pages/MyPost';
 
 import { checkAuthentication } from './Redux/authSlice';
 import { useDispatch } from 'react-redux';

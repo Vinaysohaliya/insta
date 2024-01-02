@@ -56,29 +56,34 @@ const Home = () => {
   };
 
   return (
-    <div>
+    <div className=''>
       {userData ? (
-        <div>
-          <Header />
-          {followedUsers.length !== 0 ? (
-            followedPosts.map((post) => (
-              <div key={post.$id}>
-                <PostCard
-                  location={post.location}
-                  caption={post.caption}
-                  featuredImage={post.img}
-                  userId={post.userId}
-                  myId={userData.$id}
-                  documentsId={post.$id}
-                />
+
+        <div className=' flex  '>
+        <Header />
+
+          <div className=' h-screen overflow-scroll w-3/4'>
+            {followedUsers.length !== 0 ? (
+              followedPosts.map((post) => (
+                <div key={post.$id}>
+                  <PostCard
+                    location={post.location}
+                    caption={post.caption}
+                    featuredImage={post.img}
+                    userId={post.userId}
+                    myId={userData.$id}
+                    documentsId={post.$id}
+                  />
+                </div>
+              ))
+            ) : (
+              <div style={{ textAlign: 'center', marginTop: '20px', fontSize: '18px', color: '#555' }}>
+
+                <Link to='/allpost'>{NoFollows}</Link>
               </div>
-            ))
-          ) : (
-            <div style={{ textAlign: 'center', marginTop: '20px', fontSize: '18px', color: '#555' }}>
-              
-              <Link to='/allpost'>{NoFollows}</Link>
-            </div>
-          )}
+            )}
+          </div>
+
         </div>
       ) : (
         <Signup />
