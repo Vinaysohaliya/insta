@@ -14,6 +14,7 @@ import { useEffect } from 'react';
 import MyProfile from './pages/MyProfile';
 import MyFollower from './Components/MyFollower';
 import MyFollowing from './Components/MyFollowing';
+import EditProfile from './pages/EditProfile';
 
 function App() {
 
@@ -36,6 +37,7 @@ function App() {
         <Route path="/profile" element={<MyProfile/>} ></Route>
         <Route path="/myfollower/:userId" element={<MyFollower />} ></Route>
         <Route path="/myfollowing/:userId" element={<MyFollowing />} ></Route>
+        <Route path="/editprofile" element={<EditProfile />} ></Route>
         
       </Routes>
     </>

@@ -84,6 +84,23 @@ export class userService {
       }
     }
 
+   async updateProfile({documentId,name,bio,profileId}){
+    try {
+      return await this.databases.updateDocument(
+        config.appWriteDb,
+        config.appWriteUserCollection,
+        documentId,
+        {
+          profileId:profileId,
+          name:name,
+          bio:bio
+        }
+      )
+    } catch (error) {
+      throw error;
+    }
+   }
+
     async countFollower(myId){
       try {
         const user = await this.databases.getDocument(

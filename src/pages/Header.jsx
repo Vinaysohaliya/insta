@@ -8,8 +8,10 @@ import Search from '../Components/Search';
 import { GoSignOut } from "react-icons/go";
 import { FaInstagram } from "react-icons/fa";
 import { AiOutlineHome } from "react-icons/ai";
-import { CiSearch } from "react-icons/ci";
+import { IoSearch } from "react-icons/io5";
 import { FiPlusCircle } from "react-icons/fi";
+import { SiPostcss } from "react-icons/si";
+import { PiSignpostBold } from "react-icons/pi";
 import '../App.css'
 
 const Header = () => {
@@ -55,8 +57,8 @@ const Header = () => {
         {userStatus ? (
           <div className='h-screen flex flex-col items-center justify-around'>
             <h1 className="text-lg font-bold flex items-center mb-4">
-              <FaInstagram style={{ fontSize: '24px', cursor: 'pointer' }} />
-              <span className='px-2 hidden md:inline-block'>Insta</span>
+              <FaInstagram style={{ fontSize: '24px' }} />
+              <span className='px-2 hidden md:inline-block'>Instagram</span>
             </h1>
 
             <div className='flex flex-col items-center'>
@@ -71,15 +73,24 @@ const Header = () => {
                 </div>
               ) : (
                 <div onClick={handleSearchClick} className="flex pb-6 items-center cursor-pointer">
-                  <CiSearch style={{ fontSize: '24px', cursor: 'pointer' }} />
-                  <span className='pl-1 hidden md:inline-block'>Search</span>
+                  <IoSearch style={{ fontSize: '24px', cursor: 'pointer' }} />
+                  <span className='px-2 hidden md:inline-block'>Search</span>
                 </div>
               )}
               <Link to='/addpost' className='flex items-center pb-6'>
                 <FiPlusCircle style={{ fontSize: '24px', cursor: 'pointer' }} />
                 <span className='px-2 hidden md:inline-block'>Add Post</span>
               </Link>
-              <img width={50} onClick={handleNavigate} src={profileImg} className='rounded-full m'></img>
+              <Link to='/mypost' className='flex items-center pb-6'>
+                <SiPostcss style={{ fontSize: '24px', cursor: 'pointer' }} />
+                <span className='px-2 hidden md:inline-block'>My Post</span>
+              </Link>
+              <Link to='/allpost' className='flex items-center pb-6'>
+                <PiSignpostBold style={{ fontSize: '24px', cursor: 'pointer' }} />
+                <span className='px-2 hidden md:inline-block'>All Post</span>
+              </Link>
+              <img  onClick={handleNavigate} src={profileImg} className='rounded-full size-12'></img>
+
             </div>
 
             <button onClick={handleLogout} className="cursor-pointer flex justify-center items-center">

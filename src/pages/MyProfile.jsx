@@ -46,40 +46,71 @@ const MyProfile = () => {
   }, [targetUserId]);
 
   return (
-    <div className="flex items-center justify-center space-x-8 p-4">
-      <div className="max-w-xs">
+    <div className="bg-gradient-to-b from-pink-300  via-purple-300 to-indigo-300 min-h-screen flex flex-col items-center space-y-8 p-4">
+      <div className="max-w-xs border-4 border-white rounded-full overflow-hidden">
         {profileImg && (
           <img
-            className="rounded-full h-32 w-32 object-cover border-4 border-white"
+            className="rounded-full h-32 w-32 object-cover"
             src={profileImg}
             alt="Profile Image"
           />
         )}
       </div>
-      <div className="text-left">
+      <div className="text-center bg-white bg-opacity-80 p-4 rounded-md">
         {user ? (
           <>
+            {
+              authUser.$id === targetUserId ? <Link to="/editprofile" className="flex items-center">
+                <span className="px-2 bg-blue-500 rounded-full p-2 text-cyan-50">Edit Profile</span>
+              </Link> : null
+            }
             <p className="text-2xl font-semibold">{user.name}</p>
             {targetUserId && (
-              <Link to={`/myfollower/${targetUserId}`} className="text-gray-600 hover:underline">
-                Followers: {followerCount}
-              </Link>
+              <div className='flex space-x-4'>
+                <Link to={`/myfollower/${targetUserId}`} className="text-gray-600 hover:underline transition duration-300 ease-in-out transform hover:scale-105">
+                  <span className="flex items-center">
+                    <span className="mr-1">Followers:</span>
+                    <span className="font-bold">{followerCount}</span>
+                  </span>
+                </Link>
+
+                <Link to={`/myfollowing/${targetUserId}`} className="text-gray-600 hover:underline transition duration-300 ease-in-out transform hover:scale-105">
+                  <span className="flex items-center">
+                    <span className="mr-1">Following:</span>
+                    <span className="font-bold">{followingCount}</span>
+                  </span>
+                </Link>
+
+              </div>
             )}
-            <Link to={`/myfollowing/${targetUserId}`} className="block text-gray-600 hover:underline">
-              Following: {followingCount}
-            </Link>
           </>
         ) : (
           <p>Loading user data...</p>
         )}
+        {
+          user?.bio && (
+            <p className="text-lg mt-2">{user.bio}</p>
+          )
+        }
+        {userId !== authUser.$id ? (
+          null
+        ) : (
+          <Link to="/editprofile" className="text-blue-500 underline">
+            Add Bio
+          </Link>
+        )}
+
       </div>
-      <div className="grid grid-cols-3 gap-2 mt-4">
+      <div className="grid grid-cols-3 gap-2 mt-4 w-full">
         {mypost.map((post) => (
-          <div key={post.$id} className="overflow-hidden">
+          <div key={post.$id} className="overflow-hidden relative">
             <OnlyImg featuredImage={post.img} documentId={post.$id} myId={authUser.$id} userId={targetUserId} />
+            {/* You can add a border-radius here */}
+            <div className="absolute inset-0 border border-white rounded-md"></div>
           </div>
         ))}
       </div>
+
     </div>
   );
 };

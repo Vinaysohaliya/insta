@@ -65,8 +65,11 @@ const Signup = () => {
       <div className="bg-white p-8 flex flex-col items-center justify-center rounded shadow-md w-96">
         <h2 className="text-3xl font-bold mb-6 text-center">Sign up to Instagram</h2>
         <form onSubmit={handleSubmit}>
-          <label>Profile Img</label>
-          <input type="file" name="img" onChange={handleImg} required />
+          <label>Profile Img
+            <div className="bg-gray-200 p-4 rounded-lg text-center w-80">
+              {formData.img ? 'Image Selected' : 'Choose an Image'}
+            </div>
+            <input className=' hidden' type="file" name="img" onChange={handleImg} required /></label>
           <label className="block mb-4">
             Full Name:
             <input

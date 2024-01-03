@@ -18,15 +18,18 @@ const PostCard = ({ featuredImage, location, caption, userId, myId, documentsId,
   const [like, setLike] = useState(0);
   const [isLiked, setIsLiked] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
-  const [clicked, setclicked] = useState(false);
+  const [clicked, setClicked] = useState(false);
+
   useEffect(() => {
     const fetchData = async () => {
       try {
         const client = new Client();
 
         client.setEndpoint(config.appWriteUrl).setProject(config.appWriteProject);
-        client.subscribe(`databases.${config.appWriteDb}.collections.${config.appWritePostCollection}.documents`, response => {
-          if (response.events.includes(`databases.${config.appWriteDb}.collections.${config.appWritePostCollection}`)) {
+        client.subscribe(`databases.${config.appWriteDb}.collections.${config.appWritePostCollection}.documents.${documentsId}`, response => {
+          const eventPath = `databases.${config.appWriteDb}.collections.${config.appWritePostCollection}.documents.${documentsId}`;
+          const arr = eventPath.split(".");
+          if (arr.includes(documentsId)) {
             const updatedLike = response.payload.like?.length || 0;
             setLike(updatedLike);
           }
@@ -59,10 +62,10 @@ const PostCard = ({ featuredImage, location, caption, userId, myId, documentsId,
     };
 
     fetchData();
-  }, [userId, featuredImage, myId, like]);
+  }, [userId, featuredImage, myId, like, documentsId]);
 
   const handleFollow = async () => {
-    setclicked(true);
+    setClicked(true);
     try {
       const isFollowingValue = await userService.isFollowing(myId, userId);
       if (!isFollowingValue) {
@@ -74,46 +77,47 @@ const PostCard = ({ featuredImage, location, caption, userId, myId, documentsId,
     } catch (error) {
       console.error(error);
     } finally {
-      setclicked(false);
+      setClicked(false);
     }
   };
 
   const handleLike = async () => {
-    setIsLiked(true);
+    setClicked(true);
     try {
       const addLike = await service.addLike(documentsId, myId);
     } catch (error) {
       console.log(error);
       throw error;
-    }
-    finally {
-      setclicked(false);
+    } finally {
+      setClicked(false);
     }
   };
 
   const formattedDate = new Date(createdPost).toLocaleDateString();
 
   return (
-    <div onDoubleClick={handleLike} className={`max-w-md mx-auto bg-white shadow-lg rounded-md overflow-hidden my-4 `}>
+    <div onDoubleClick={handleLike} className="max-w-md mx-auto bg-white shadow-lg rounded-md overflow-hidden my-4">
       <div className="p-4">
-        <div className="mb-2 flex justify-between items-center">
-          <div >
+        <div className="flex justify-between items-center">
+          <div>
             {user ? (
               <p className="font-bold">{user?.name}</p>
             ) : (
-              <Skeleton count={50} />
+              <Skeleton width={100} height={16} />
             )}
           </div>
           <div>
             {String(myId) !== String(userId) && !isFollowing && (
+              <div className=' bg-blue-500 rounded-full p-1 flex items-center cursor-pointer '>
+                <span className=' px-2'>Follow</span><SlUserFollow  disabled={clicked} onClick={handleFollow}  />
 
-              <SlUserFollow disabled={clicked} style={{ fontSize: '24px', cursor: 'pointer' }} onClick={handleFollow} className=' cursor-pointer' />
+              </div>
             )}
           </div>
         </div>
 
-        <div className="mb-2 flex">
-          <Link to='/profile' state={{ userId }} className=' cursor-pointer' >
+        <div className="flex items-center mb-2">
+          <Link to='/profile' state={{ userId }} className="cursor-pointer">
             {profileImg ? (
               <img
                 src={profileImg}
@@ -124,14 +128,16 @@ const PostCard = ({ featuredImage, location, caption, userId, myId, documentsId,
               <Skeleton circle={true} width={24} height={24} />
             )}
           </Link>
-          <div className="flex items-center mb-2">
-            <span className=' mr-2'><FaLocationDot /></span> {location ? (
+          <div>
+            <span className="mr-2"><FaLocationDot /></span>
+            {location ? (
               <p className="text-gray-600">{location}</p>
             ) : (
               <Skeleton width={80} height={16} />
             )}
           </div>
         </div>
+
         <div className="w-full flex justify-center mb-4">
           {filePreview ? (
             <img src={filePreview} className="rounded-xl" alt="Post" />
@@ -139,6 +145,7 @@ const PostCard = ({ featuredImage, location, caption, userId, myId, documentsId,
             <Skeleton width={300} height={200} />
           )}
         </div>
+
         <div className="mb-2">
           {caption ? (
             <p className="text-gray-800">{caption}</p>
@@ -147,20 +154,18 @@ const PostCard = ({ featuredImage, location, caption, userId, myId, documentsId,
           )}
         </div>
 
-        <div className=' flex items-center justify-between'>
-
+        <div className="flex items-center justify-between">
           {isLiked ? (
             <FcLike style={{ fontSize: '24px', cursor: 'pointer' }} onClick={handleLike} />
           ) : (
             <CiHeart style={{ fontSize: '24px', cursor: 'pointer' }} onClick={handleLike} />
-
           )}
-          {like ? (
-            <div>{like} likes</div>
+          {like !== null ? (
+            <div>{like} {like === 1 ? 'like' : 'likes'}</div>
           ) : (
             <Skeleton width={60} count={1} height={16} />
           )}
-          Created At {formattedDate}
+          <span className="text-gray-500">{formattedDate}</span>
         </div>
       </div>
     </div>

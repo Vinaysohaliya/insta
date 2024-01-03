@@ -4,6 +4,7 @@ import SearchCard from './SearchCard';
 import { IoMdClose } from "react-icons/io";
 
 const Search = ({ setSearchVisible }) => {
+    
     const [input, setInput] = useState("");
     const [users, setUsers] = useState([]);
 
