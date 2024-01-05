@@ -1,44 +1,54 @@
 import React, { useEffect, useState } from 'react';
 import service from '../Appwrite/post';
+import { useSelector } from 'react-redux';
 
-const OnlyImg = ({ featuredImage, myId, userId, documentId }) => {
+const OnlyImg = ({ featuredImage,  userId, documentId }) => {
   const [profileImg, setProfileImg] = useState(null);
 
+  const myId = useSelector((state) => state.auth.userData.$id);
+
   useEffect(() => {
-    async function fetchProfileImage() {
+    const fetchProfileImage = async () => {
       try {
         const profileImgResult = await service.getFilePreview(featuredImage);
         setProfileImg(profileImgResult.href);
       } catch (error) {
         console.error('Error fetching profile image:', error);
       }
-    }
+    };
 
     fetchProfileImage();
   }, [featuredImage]);
 
-  function removeImg() {
-    const deleteimg = service.deleteFile(featuredImage);
-    const deletePost = service.deletePost(documentId);
-  }
+  const removeImg = async () => {
+    try {
+      await service.deleteFile(featuredImage);
+      await service.deletePost(documentId);
+    } catch (error) {
+      console.error('Error removing image or post:', error);
+    }finally{
+      window.location.reload();
+    }
+  };
+
   return (
     <div className="flex items-center justify-center p-4">
       <div className="max-w-xs">
         {profileImg && (
           <div className="relative">
             <img
-              className="rounded-full h-20 w-20 object-cover border border-gray-300"
+              className="w-52 object-cover border border-gray-300"
               src={profileImg}
               alt="Profile Image"
             />
-            {myId === userId ? (
+            {String(myId) === String(userId) && (
               <button
                 onClick={removeImg}
-                className="absolute bottom-0 right-0 p-1 bg-red-500 text-white rounded-full hover:bg-red-600"
+                className="bottom-0 right-0 p-1 bg-red-500  text-white cursor-pointer rounded hover:bg-red-600"
               >
                 Delete
               </button>
-            ):(null)}
+            )}
           </div>
         )}
       </div>

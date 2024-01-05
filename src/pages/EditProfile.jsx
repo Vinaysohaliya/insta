@@ -5,6 +5,14 @@ import service from '../Appwrite/post';
 import { useNavigate } from 'react-router-dom';
 
 const EditProfile = () => {
+
+  const [formData, setFormData] = useState({
+    userName: '',
+    profileImg: '',
+    bio: '',
+  });
+  const [profileId, setprofileId] = useState('');
+
   const navigate = useNavigate();
   const myId = useSelector((state) => state.auth.userData?.$id);
 
@@ -21,12 +29,7 @@ const EditProfile = () => {
     fetchProfileId();
   }, [myId]);
 
-  const [formData, setFormData] = useState({
-    userName: '',
-    profileImg: '',
-    bio: '',
-  });
-  const [profileId, setprofileId] = useState('');
+
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -52,10 +55,14 @@ const EditProfile = () => {
     e.preventDefault();
 
     try {
-      await service.deleteFile(profileId);
+      let newProfileImageId = profileId;
 
-      const newProfileImage = await service.createFile(formData.profileImg);
-      const newProfileImageId = newProfileImage.$id;
+      if (formData.profileImg) {
+        await service.deleteFile(profileId);
+
+        const newProfileImage = await service.createFile(formData.profileImg);
+        newProfileImageId = newProfileImage.$id;
+      }
 
       const updatedUser = await userservice.updateProfile({
         name: formData.userName,
@@ -67,9 +74,7 @@ const EditProfile = () => {
       console.log(updatedUser);
     } catch (error) {
       console.error('Error updating profile:', error);
-      // Handle the error appropriately, e.g., show a user-friendly message
     } finally {
-      // Use navigate from react-router-dom to go back
       navigate(-1);
     }
   };
@@ -90,14 +95,14 @@ const EditProfile = () => {
           className="w-full border rounded-md p-2 mb-4"
         />
 
-<label htmlFor="profileImg" className="block text-sm font-medium text-gray-600 mb-2">
+        <label htmlFor="profileImg" className="block text-sm font-medium text-gray-600 mb-2">
           Profile Image:
           <div className="bg-gray-200 p-4 rounded-full text-center">
             {formData.profileImg ? 'Image Selected' : 'Choose an Image'}
           </div>
           <input
             type="file"
-            
+
             id="profileImg"
             name="profileImg"
             onChange={handleImg}

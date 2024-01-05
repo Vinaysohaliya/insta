@@ -43,7 +43,7 @@ const MyProfile = () => {
     }
 
     fetchUserDetails();
-  }, [targetUserId]);
+  }, [targetUserId, authUser, userId]);
 
   return (
     <div className="bg-gradient-to-b from-pink-300  via-purple-300 to-indigo-300 min-h-screen flex flex-col items-center space-y-8 p-4">
@@ -60,7 +60,7 @@ const MyProfile = () => {
         {user ? (
           <>
             {
-              authUser.$id === targetUserId ? <Link to="/editprofile" className="flex items-center">
+              authUser && authUser.$id === targetUserId ? <Link to="/editprofile" className="flex items-center">
                 <span className="px-2 bg-blue-500 rounded-full p-2 text-cyan-50">Edit Profile</span>
               </Link> : null
             }
@@ -85,28 +85,28 @@ const MyProfile = () => {
             )}
           </>
         ) : (
-          <p>Loading user data...</p>
+          <svg class="animate-pulse h-5 w-5 mr-3 ..." viewBox="0 0 24 24">
+          </svg>
         )}
         {
-          user?.bio && (
+          user?.bio ? (
             <p className="text-lg mt-2">{user.bio}</p>
+          ) : (
+            (authUser && userId && userId !== authUser.$id) ? null : (
+              <Link to="/editprofile" className="text-blue-500 underline">
+                Add Bio
+              </Link>
+            )
           )
         }
-        {userId !== authUser.$id ? (
-          null
-        ) : (
-          <Link to="/editprofile" className="text-blue-500 underline">
-            Add Bio
-          </Link>
-        )}
+
+
 
       </div>
       <div className="grid grid-cols-3 gap-2 mt-4 w-full">
         {mypost.map((post) => (
           <div key={post.$id} className="overflow-hidden relative">
-            <OnlyImg featuredImage={post.img} documentId={post.$id} myId={authUser.$id} userId={targetUserId} />
-            {/* You can add a border-radius here */}
-            <div className="absolute inset-0 border border-white rounded-md"></div>
+            <OnlyImg featuredImage={post.img} documentId={post.$id} userId={targetUserId} />
           </div>
         ))}
       </div>
