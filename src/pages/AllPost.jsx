@@ -3,20 +3,24 @@ import service from '../Appwrite/post';
 import { useDispatch, useSelector } from 'react-redux';
 import { setPost } from '../Redux/contentSlice';
 import PostCard from '../Components/PostCard';
-import '../hooks/randomPpost'
+import Loader from '../Components/Loader/Loader';
+
 const AllPost = () => {
   const myId = useSelector((state) => state.auth.userData?.$id);
   const dispatch = useDispatch();
   const [posts, setPosts] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     async function fetchPosts() {
       try {
         const allPosts = await service.getPosts();
-        const shuffledPost=fisherYatesShuffle(allPosts.documents);
+        const shuffledPost = fisherYatesShuffle(allPosts.documents);
         setPosts(shuffledPost);
       } catch (error) {
         console.log(error);
+      } finally {
+        setIsLoading(false);
       }
     }
 
@@ -43,21 +47,25 @@ const AllPost = () => {
 
   return (
     <div className="container mx-auto p-4">
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-        {posts &&
-          posts.map((post) => (
-            <PostCard
-              key={post.$id}
-              createdPost={post.$createdAt}
-              caption={post.caption}
-              featuredImage={post.img}
-              location={post.location}
-              userId={post.userId}
-              myId={myId}
-              documentsId={post.$id}
-            />
-          ))}
-      </div>
+      {isLoading ? (
+        <Loader />
+      ) : (
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+          {posts &&
+            posts.map((post) => (
+              <PostCard
+                key={post.$id}
+                createdPost={post.$createdAt}
+                caption={post.caption}
+                featuredImage={post.img}
+                location={post.location}
+                userId={post.userId}
+                myId={myId}
+                documentsId={post.$id}
+              />
+            ))}
+        </div>
+      )}
     </div>
   );
 };

@@ -18,9 +18,9 @@ const Header = () => {
   const [searchVisible, setSearchVisible] = useState(false);
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const user = useSelector((state) => state.auth.userData);
-  const userStatus = useSelector((state) => state.auth.status);
-  const profileImg = useSelector((state) => state.auth.userData.profileImgHref);
+  const user = useSelector((state) => state.auth?.userData);
+  const userStatus = useSelector((state) => state.auth?.status);
+  const profileImg = useSelector((state) => state.auth?.userData?.profileImgHref);
 
   const handleLogout = () => {
     try {
@@ -41,18 +41,18 @@ const Header = () => {
       }
     }
     AllUser();
-  }, []);
+  }, [profileImg, user, userStatus]);
 
   function handleSearchClick() {
     setSearchVisible(!searchVisible);
   }
-  
+
   function handleNavigate() {
     navigate("/profile");
   }
 
   return (
-    <div className="flex header p-4 bg-black text-white h-screen w-1/4 items-center justify-center">
+    <div className="flex header p-4 bg-black text-white h-screen w-full items-center justify-center">
       <div className='overflow-hidden'>
         {userStatus ? (
           <div className='h-screen flex flex-col items-center justify-around'>
@@ -89,8 +89,9 @@ const Header = () => {
                 <PiSignpostBold style={{ fontSize: '24px', cursor: 'pointer' }} />
                 <span className='px-2 hidden md:inline-block'>All Post</span>
               </Link>
-              <img  onClick={handleNavigate} src={profileImg} className='rounded-full size-12'></img>
-
+              {profileImg ?
+                <img onClick={handleNavigate} src={profileImg} className='rounded-full size-12 cursor-pointer'></img>:null
+              }
             </div>
 
             <button onClick={handleLogout} className="cursor-pointer flex justify-center items-center">

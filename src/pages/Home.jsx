@@ -2,11 +2,10 @@ import React, { useEffect, useState } from 'react';
 import userService from '../Appwrite/user';
 import postService from '../Appwrite/post';
 import { useSelector } from 'react-redux';
-import Header from '../pages/Header';
 import PostCard from '../Components/PostCard';
 import Signup from './Signup';
 import { Link } from 'react-router-dom';
-import Skeleton from 'react-loading-skeleton';
+import Loader from '../Components/Loader/Loader';
 
 const Home = () => {
   const [followedUsers, setFollowedUsers] = useState([]);
@@ -57,36 +56,37 @@ const Home = () => {
 
   return (
     <div className=''>
-      {userData ? (
-
-        <div className=' flex  '>
-        <Header />
-
-          <div className=' h-screen overflow-scroll w-3/4'>
-            {followedUsers.length !== 0 ? (
-              followedPosts.map((post) => (
-                <div key={post.$id}>
-                  <PostCard
-                    location={post.location}
-                    caption={post.caption}
-                    featuredImage={post.img}
-                    userId={post.userId}
-                    myId={userData.$id}
-                    documentsId={post.$id}
-                  />
+      {userData && followedPosts   ? (
+        <div className=''>
+          {userData ? (
+            <div className='  w-3/4'>
+              {followedUsers.length !== 0 ? (
+                followedPosts.map((post) => (
+                  <div key={post.$id}>
+                    <PostCard
+                      location={post.location}
+                      caption={post.caption}
+                      featuredImage={post.img}
+                      userId={post.userId}
+                      myId={userData.$id}
+                      documentsId={post.$id}
+                    />
+                  </div>
+                ))
+              ) : (
+                <div style={{ textAlign: 'center', marginTop: '20px', fontSize: '18px', color: '#555' }}>
+                  <Link to='/allpost'>{NoFollows}</Link>
                 </div>
-              ))
-            ) : (
-              <div style={{ textAlign: 'center', marginTop: '20px', fontSize: '18px', color: '#555' }}>
-
-                <Link to='/allpost'>{NoFollows}</Link>
-              </div>
-            )}
-          </div>
-
+              )}
+            </div>
+          ) : (
+            <Signup />
+          )}
         </div>
       ) : (
-        <Signup />
+        <div className='flex items-center justify-center h-screen'>
+          <Loader />
+        </div>
       )}
     </div>
   );

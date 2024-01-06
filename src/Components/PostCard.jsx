@@ -4,11 +4,12 @@ import userService from '../Appwrite/user';
 import { Client } from 'appwrite';
 import config from '../config/config';
 import Skeleton from 'react-loading-skeleton';
-import { FaLocationDot } from "react-icons/fa6";
+import { FaLocationDot } from 'react-icons/fa6';
 import { Link } from 'react-router-dom';
-import { FcLike } from "react-icons/fc";
-import { CiHeart } from "react-icons/ci";
-import { SlUserFollow } from "react-icons/sl";
+import { FcLike } from 'react-icons/fc';
+import { CiHeart } from 'react-icons/ci';
+import { SlUserFollow } from 'react-icons/sl';
+import Loader from '../Components/Loader/Loader';
 
 const PostCard = ({ featuredImage, location, caption, userId, myId, documentsId, createdPost }) => {
   const [filePreview, setFilePreview] = useState(null);
@@ -18,6 +19,7 @@ const PostCard = ({ featuredImage, location, caption, userId, myId, documentsId,
   const [like, setLike] = useState(0);
   const [isLiked, setIsLiked] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [isFollowingLoading, setIsFollowingLoading] = useState(false);
   const [clicked, setClicked] = useState(false);
 
   useEffect(() => {
@@ -65,7 +67,12 @@ const PostCard = ({ featuredImage, location, caption, userId, myId, documentsId,
   }, [userId, featuredImage, myId, like, documentsId]);
 
   const handleFollow = async () => {
-    setClicked(true);
+    if (isFollowingLoading) {
+      return; // Do nothing if already in progress
+    }
+
+    setIsFollowingLoading(true);
+
     try {
       const isFollowingValue = await userService.isFollowing(myId, userId);
       if (!isFollowingValue) {
@@ -77,7 +84,7 @@ const PostCard = ({ featuredImage, location, caption, userId, myId, documentsId,
     } catch (error) {
       console.error(error);
     } finally {
-      setClicked(false);
+      setIsFollowingLoading(false);
     }
   };
 
@@ -97,77 +104,80 @@ const PostCard = ({ featuredImage, location, caption, userId, myId, documentsId,
 
   return (
     <div onDoubleClick={handleLike} className="max-w-md mx-auto bg-white shadow-lg rounded-md overflow-hidden my-4">
-      <div className="p-4">
-        <div className="flex justify-between items-center">
-          <div>
-            {user ? (
-              <p className="font-bold">{user?.name}</p>
+      {isLoading || isFollowingLoading ? (
+        <Loader />
+      ) : (
+        <div className="p-4">
+          <div className="flex justify-between items-center">
+            <div>
+              {user ? (
+                <p className="font-bold">{user?.name}</p>
+              ) : (
+                <Skeleton width={100} height={16} />
+              )}
+            </div>
+            <div>
+              {String(myId) !== String(userId) && !isFollowing && (
+                <div onClick={handleFollow} className='bg-blue-500 rounded-full p-1 flex items-center cursor-pointer'>
+                  <span className='px-2'>Follow</span><SlUserFollow disabled={isFollowingLoading} />
+                </div>
+              )}
+            </div>
+          </div>
+
+          <div className="flex items-center mb-2">
+            <Link to='/profile' state={{ userId }} className="cursor-pointer">
+              {profileImg ? (
+                <img
+                  src={profileImg}
+                  alt="Profile"
+                  className="rounded-full h-12 w-12 mr-2"
+                />
+              ) : (
+                <Skeleton circle={true} width={24} height={24} />
+              )}
+            </Link>
+            <div>
+              <span className="mr-2"><FaLocationDot /></span>
+              {location ? (
+                <p className="text-gray-600">{location}</p>
+              ) : (
+                <Skeleton width={80} height={16} />
+              )}
+            </div>
+          </div>
+
+          <div className="w-full flex justify-center mb-4">
+            {filePreview ? (
+              <img src={filePreview} className="rounded-xl" alt="Post" />
             ) : (
-              <Skeleton width={100} height={16} />
+              <Skeleton width={300} height={200} />
             )}
           </div>
-          <div>
-            {String(myId) !== String(userId) && !isFollowing && (
-              <div className=' bg-blue-500 rounded-full p-1 flex items-center cursor-pointer '>
-                <span className=' px-2'>Follow</span><SlUserFollow  disabled={clicked} onClick={handleFollow}  />
 
-              </div>
+          <div className="mb-2">
+            {caption ? (
+              <p className="text-gray-800">{caption}</p>
+            ) : (
+              <Skeleton count={2} />
             )}
           </div>
-        </div>
 
-        <div className="flex items-center mb-2">
-          <Link to='/profile' state={{ userId }} className="cursor-pointer">
-            {profileImg ? (
-              <img
-                src={profileImg}
-                alt="Profile"
-                className="rounded-full h-12 w-12 mr-2"
-              />
+          <div className="flex items-center justify-between">
+            {isLiked ? (
+              <FcLike style={{ fontSize: '24px', cursor: 'pointer' }} onClick={handleLike} />
             ) : (
-              <Skeleton circle={true} width={24} height={24} />
+              <CiHeart style={{ fontSize: '24px', cursor: 'pointer' }} onClick={handleLike} />
             )}
-          </Link>
-          <div>
-            <span className="mr-2"><FaLocationDot /></span>
-            {location ? (
-              <p className="text-gray-600">{location}</p>
+            {like !== null ? (
+              <div>{like} {like === 1 ? 'like' : 'likes'}</div>
             ) : (
-              <Skeleton width={80} height={16} />
+              <Skeleton width={60} count={1} height={16} />
             )}
+            <span className="text-gray-500">{formattedDate}</span>
           </div>
         </div>
-
-        <div className="w-full flex justify-center mb-4">
-          {filePreview ? (
-            <img src={filePreview} className="rounded-xl" alt="Post" />
-          ) : (
-            <Skeleton width={300} height={200} />
-          )}
-        </div>
-
-        <div className="mb-2">
-          {caption ? (
-            <p className="text-gray-800">{caption}</p>
-          ) : (
-            <Skeleton count={2} />
-          )}
-        </div>
-
-        <div className="flex items-center justify-between">
-          {isLiked ? (
-            <FcLike style={{ fontSize: '24px', cursor: 'pointer' }} onClick={handleLike} />
-          ) : (
-            <CiHeart style={{ fontSize: '24px', cursor: 'pointer' }} onClick={handleLike} />
-          )}
-          {like !== null ? (
-            <div>{like} {like === 1 ? 'like' : 'likes'}</div>
-          ) : (
-            <Skeleton width={60} count={1} height={16} />
-          )}
-          <span className="text-gray-500">{formattedDate}</span>
-        </div>
-      </div>
+      )}
     </div>
   );
 };

@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useSelector } from 'react-redux';
 import service from '../Appwrite/post';
 import { useNavigate } from 'react-router-dom';
+import Loader from '../Components/Loader/Loader';
 
 const AddPostPage = () => {
   const user = useSelector((state) => state.auth.userData);
@@ -12,6 +13,7 @@ const AddPostPage = () => {
     caption: '',
     location: '',
   });
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleInputChange = (event) => {
     const { name, value } = event.target;
@@ -25,6 +27,7 @@ const AddPostPage = () => {
 
   const handleSubmit = async () => {
     try {
+      setIsLoading(true);
       const file = postDetails.image && (await service.createFile(postDetails.image));
       if (file) {
         const post = await service.createPost({
@@ -37,59 +40,72 @@ const AddPostPage = () => {
     } catch (error) {
       console.log(error);
     } finally {
-      navigate('/');
+      setIsLoading(false);
+      navigate('/mypost');
     }
   };
 
   return (
-    <div className="max-w-xl mx-auto p-4">
-      <h1 className="text-2xl font-semibold mb-4">Add Post</h1>
 
-      <label htmlFor="image" className="block mb-4 cursor-pointer">
-        <input
-          type="file"
-          accept="image/*"
-          id="image"
-          onChange={handleImageChange}
-          className="hidden"
-        />
-        <div className="bg-gray-200 p-4 rounded-lg text-center">
-          {postDetails.image ? 'Image Selected' : 'Choose an Image'}
+    <>
+      {isLoading ? (
+        <div className='flex h-screen items-center justify-center'>
+          <Loader />
         </div>
-      </label>
+      ) : (
+        <div className="max-w-xl mx-auto p-4">
+          <h1 className="text-2xl font-semibold mb-4">Add Post</h1>
 
-      <textarea
-        name="caption"
-        placeholder="Enter your caption..."
-        value={postDetails.caption}
-        onChange={handleInputChange}
-        className="w-full p-2 border border-gray-300 rounded mb-4"
-      />
+          <label htmlFor="image" className="block mb-4 cursor-pointer">
+            <input
+              type="file"
+              accept="image/*"
+              id="image"
+              onChange={handleImageChange}
+              className="hidden"
+            />
+            <div className="bg-gray-200 p-4 rounded-lg text-center">
+              {postDetails.image ? 'Image Selected' : 'Choose an Image'}
+            </div>
+          </label>
 
-      <input
-        type="text"
-        name="location"
-        placeholder="Location"
-        value={postDetails.location}
-        onChange={handleInputChange}
-        className="w-full p-2 border border-gray-300 rounded mb-4"
-      />
+          <textarea
+            name="caption"
+            placeholder="Enter your caption..."
+            value={postDetails.caption}
+            onChange={handleInputChange}
+            className="w-full p-2 border border-gray-300 rounded mb-4"
+          />
 
-      {postDetails.image && (
-        <img
-          src={URL.createObjectURL(postDetails.image)}
-          alt="Preview"
-          className="max-w-full h-auto mb-4 rounded"
-        />
+          <input
+            type="text"
+            name="location"
+            placeholder="Location"
+            value={postDetails.location}
+            onChange={handleInputChange}
+            className="w-full p-2 border border-gray-300 rounded mb-4"
+          />
+
+          {postDetails.image && (
+            <img
+              src={URL.createObjectURL(postDetails.image)}
+              alt="Preview"
+              className="max-w-full h-auto mb-4 rounded"
+            />
+          )}
+
+          <button
+            onClick={handleSubmit}
+            className=" border-2 border-black  py-2 px-4 rounded hover:bg-slate-400 focus:outline-none transition-colors duration-300"
+          >
+            Share
+          </button>
+        </div>
+
       )}
+    </>
 
-      <button
-        onClick={handleSubmit}
-        className=" border-2 border-black  py-2 px-4 rounded hover:bg-slate-400 focus:outline-none transition-colors duration-300"
-      >
-        Share
-      </button>
-    </div>
+
   );
 };
 
