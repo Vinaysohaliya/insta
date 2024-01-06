@@ -4,7 +4,7 @@ import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { checkAuthentication } from './Redux/authSlice';
 
-import RootLayout from './Components/RootLayout/RootLayout'; // Import your RootLayout component
+import RootLayout from './Components/RootLayout/RootLayout'; 
 import Signup from './pages/Signup';
 import Login from './pages/Login';
 import Home from './pages/Home';
@@ -12,8 +12,8 @@ import AddPost from './pages/AddPost';
 import AllPost from './pages/AllPost';
 import MyPost from './pages/MyPost';
 import MyProfile from './pages/MyProfile';
-import MyFollower from './components/MyFollower';
-import MyFollowing from './components/MyFollowing';
+import MyFollower from './Components/MyFollower';
+import MyFollowing from './Components/MyFollowing';
 import EditProfile from './pages/EditProfile';
 import AuthLayout from './Components/AuthLayout/AuthLayout';
 import NotFound from './pages/NotFound';
