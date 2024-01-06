@@ -75,7 +75,7 @@ const Home = () => {
                 ))
               ) : (
                 <div style={{ textAlign: 'center', marginTop: '20px', fontSize: '18px', color: '#555' }}>
-                  <Link to='/allpost'>{NoFollows}</Link>
+                  <Link className=' flex justify-center items-center h-screen' to='/allpost'>{NoFollows}</Link>
                 </div>
               )}
             </div>
