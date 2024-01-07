@@ -55,11 +55,11 @@ const Home = () => {
   };
 
   return (
-    <div className=''>
+    <div >
       {userData && followedPosts   ? (
-        <div className=''>
+        <div>
           {userData ? (
-            <div className='  w-3/4'>
+            <div >
               {followedUsers.length !== 0 ? (
                 followedPosts.map((post) => (
                   <div key={post.$id}>

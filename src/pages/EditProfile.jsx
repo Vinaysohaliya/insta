@@ -5,13 +5,12 @@ import service from '../Appwrite/post';
 import { useNavigate } from 'react-router-dom';
 
 const EditProfile = () => {
-
   const [formData, setFormData] = useState({
     userName: '',
     profileImg: '',
     bio: '',
   });
-  const [profileId, setprofileId] = useState('');
+  const [profileId, setProfileId] = useState('');
 
   const navigate = useNavigate();
   const myId = useSelector((state) => state.auth.userData?.$id);
@@ -20,7 +19,7 @@ const EditProfile = () => {
     async function fetchProfileId() {
       try {
         const user = await userservice.getUser(myId);
-        setprofileId(user.documents[0].profileId);
+        setProfileId(user.documents[0].profileId);
       } catch (error) {
         console.log(error);
         throw error;
@@ -28,8 +27,6 @@ const EditProfile = () => {
     }
     fetchProfileId();
   }, [myId]);
-
-
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -80,7 +77,7 @@ const EditProfile = () => {
   };
 
   return (
-    <div className="max-w-sm mx-auto mt-8 p-4 bg-white shadow-md rounded-md">
+    <div className="max-w-md mx-auto mt-8 p-4 bg-white shadow-md rounded-md">
       <h2 className="text-2xl font-semibold mb-4">Edit Profile</h2>
       <form onSubmit={handleSubmit}>
         <label htmlFor="userName" className="block text-sm font-medium text-gray-600">
@@ -102,7 +99,6 @@ const EditProfile = () => {
           </div>
           <input
             type="file"
-
             id="profileImg"
             name="profileImg"
             onChange={handleImg}
@@ -123,7 +119,7 @@ const EditProfile = () => {
 
         <button
           type="submit"
-          className="  py-2 px-4 rounded-full bg-blue-500 text-white  focus:outline-none"
+          className="py-2 px-4 rounded-full bg-blue-500 text-white focus:outline-none"
         >
           Save Changes
         </button>

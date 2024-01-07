@@ -59,7 +59,7 @@ const MyProfile = () => {
               />
             )}
           </div>
-          <div className="text-center bg-white bg-opacity-80 p-4 w-1/3  rounded-md">
+          <div className="text-center bg-white bg-opacity-80 p-4 md:w-1/2 lg:w-1/3 rounded-md">
             <>
               {authUser && authUser.$id === targetUserId ? (
                 <Link to="/editprofile" className="flex items-center">
@@ -68,7 +68,7 @@ const MyProfile = () => {
               ) : null}
               <p className="text-2xl font-semibold">{user.name}</p>
               {targetUserId && (
-                <div className='flex space-x-4'>
+                <div className='flex flex-col md:flex-row space-y-2 md:space-y-0 md:space-x-4'>
                   <Link to={`/myfollower/${targetUserId}`} className="text-gray-600 hover:underline transition duration-300 ease-in-out transform hover:scale-105">
                     <span className="flex items-center">
                       <span className="mr-1">Followers:</span>
@@ -95,7 +95,7 @@ const MyProfile = () => {
               )
             )}
           </div>
-          <div className="grid grid-cols-3 gap-2 mt-4 w-full">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2 mt-4 w-full">
             {mypost.map((post) => (
               <div key={post.$id} className="overflow-hidden relative">
                 <OnlyImg featuredImage={post.img} documentId={post.$id} userId={targetUserId} />
@@ -105,7 +105,7 @@ const MyProfile = () => {
         </div>
       ) : (
         <div className=' flex items-center justify-center h-screen'>
-        <Loader />
+          <Loader />
         </div>
       )}
     </div>
