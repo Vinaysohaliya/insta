@@ -13,10 +13,13 @@ const AuthLayout = () => {
         </>
       ) : (
         <div className='flex items-center justify-center h-screen'>
-          <Link to='/login' className='text-blue-500 underline'>
-            Please Signup/Login
-          </Link>
-        </div>
+      <Link
+        to='/login'
+        className='text-blue-500 underline transition  duration-300 ease-in-out hover:text-blue-700 hover:underline'
+      >
+        Please Signup/Login
+      </Link>
+    </div>
       )}
     </div>
   );
